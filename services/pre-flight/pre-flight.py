@@ -6,29 +6,13 @@ from os import system
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/login')
-def login():
-    try:
-        login = requests.get('http://127.0.0.1:5002/login').text
-    except requests.exceptions.ConnectionError:
-        return 'Login service unavailable'
-    return render_template('layout.html', html=login)
-
 @app.route('/new-mission')
 def newMission():
-    try:
-        newMission = requests.get('http://127.0.0.1:5004/new-mission').text
-    except requests.exceptions.ConnectionError:
-        return 'New Mission service unavailable'
-    return render_template('layout.html', html=newMission)
+    return render_template('new-mission.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=int, default=5003,
+    parser.add_argument('-p', '--port', type=int, default=5004,
                         help='specify which port to run this service on')
     parser.add_argument('-v', '--version', type=float, default=0,
                         help='specify which version of the service this is')
