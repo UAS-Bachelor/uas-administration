@@ -10,7 +10,7 @@ def index():
 @app.route('/login')
 def login():
     try:
-        login = requests.get('http://127.0.0.1:5002/login').text
+        login = requests.get('http://127.0.0.1:5002/login').text        
     except requests.exceptions.ConnectionError:
         return 'Login service unavailable'
     return render_template('layout.html', html=login)
