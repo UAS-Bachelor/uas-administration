@@ -1,14 +1,24 @@
 from flask import Flask, render_template
 import requests
 import sys
+import json
 import argparse
 from os import system
 
 app = Flask(__name__)
 
+
 @app.route('/new-mission')
 def newMission():
-    return render_template('new-mission.html')
+    return render_template('new-mission.html', message=parseJSON())
+
+
+def parseJSON():
+    """with open('../pre-flight/law_template.json') as json_file:
+        law_template = json.load(json_file)
+       return law_template"""
+    return "hi"
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

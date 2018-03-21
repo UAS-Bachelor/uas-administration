@@ -1,0 +1,9 @@
+{
+  "requirement-radio" : {
+    "Open" : {
+      "requirement-upload" : { "name" : "SORA"}
+    },
+    "Specified" : {},
+    "Certified" : {}
+  }
+}
