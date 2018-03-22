@@ -1,6 +1,6 @@
 from configobj import ConfigObj
 from sys import executable
-from subprocess import Popen, CREATE_NEW_CONSOLE
+from subprocess import Popen
 import psutil
 
 __services_dir = 'services/'
@@ -14,7 +14,7 @@ def __get_path(service):
 
 def open_cmd(service, port, version):
     Popen([executable, __get_path(service), '-p', str(port),
-           '-v', str(version)], creationflags=CREATE_NEW_CONSOLE)
+           '-v', str(version)])
 
 
 def close_cmd(pid):

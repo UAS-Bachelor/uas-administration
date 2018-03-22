@@ -10,15 +10,19 @@ app = Flask(__name__)
 
 @app.route('/new-mission')
 def newMission():
-    return render_template('new-mission.html', message=parseJSON())
+    parseJSON()
+    return render_template('new-mission.html', message="hi")
 
 
 def parseJSON():
-    """with open('../pre-flight/law_template.json') as json_file:
+    reference = 'services/pre-flight/law-template.json'
+    with open(reference) as json_file:
         law_template = json.load(json_file)
-       return law_template"""
-    return "hi"
 
+        for key, child in law_template.items():
+            print(key)
+            print(child)
+saf
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
