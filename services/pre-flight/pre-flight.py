@@ -1,28 +1,26 @@
-from flask import Flask, render_template
-import requests
-import sys
-import json
 import argparse
+import json
+import sys
 from os import system
+
+from flask import Flask, render_template
+from requirements_parser import parseJSON
 
 app = Flask(__name__)
 
 
 @app.route('/new-mission')
 def newMission():
-    parseJSON()
-    return render_template('new-mission.html', message="hi")
+    #loadJSON()
+    return render_template('new-mission.html', message=loadJSON())
 
 
-def parseJSON():
+def loadJSON():
     reference = 'services/pre-flight/law-template.json'
     with open(reference) as json_file:
         law_template = json.load(json_file)
+        return parseJSON(law_template)
 
-        for key, child in law_template.items():
-            print(key)
-            print(child)
-saf
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
