@@ -12,6 +12,7 @@ app = Flask(__name__)
 @app.route('/new-mission')
 def newMission():
     #loadJSON()
+    print("test")
     return render_template('new-mission.html', message=loadJSON())
 
 
