@@ -6,9 +6,11 @@ from os import system
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/login')
 def login():
@@ -18,6 +20,7 @@ def login():
         return 'Login service unavailable'
     return render_template('layout.html', html=login)
 
+
 @app.route('/new-mission')
 def newMission():
     try:
@@ -25,6 +28,7 @@ def newMission():
     except requests.exceptions.ConnectionError:
         return 'New Mission service unavailable'
     return render_template('layout.html', html=newMission)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,10 +1,23 @@
 {
   "requirement-radio" : {
-    "Open" : {
-      "requirement-upload" : { "name" : "SORA"}
-    },
-    "Specified" : {},
-    "Certified" : {}
+    "name" : "Flight-mode",
+    "options" : {
+      "Open": {
+        "requirement-upload": {
+          "name": "SORA-Open"
+        }
+      },
+      "Specified": {
+        "requirement-upload": {
+          "name": "SORA-Specified"
+        }
+      },
+      "Certified": {
+        "requirement-upload": {
+          "name": "SORA-Certified"
+        }
+      }
+    }
   },
-  "requirement-upload" : { "name" : "Police approval" }
+  "requirement-upload" : { "name" : "pølse" }
 }

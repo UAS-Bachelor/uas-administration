@@ -3,20 +3,28 @@ import json
 import sys
 from os import system
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from requirements_parser import parse_json
 
 app = Flask(__name__)
 
 
 @app.route('/new-mission')
-def newMission():
-    return render_template('new-mission.html', message=loadJSON())
+@app.route('/new-mission/<int:identifier>')
+def new_mission(identifier=None):
+    #print(request.args.get('x', ''))
+    #print(identifier)
+    return render_template('new-mission.html', message=load_json())
 
 
-def loadJSON():
+'''@app.route('/new-mission', methods=['POST'])
+def update_new_mission():
+    return ""
+'''
+
+def load_json():
     reference = 'services/pre-flight/law-template.json'
-    with open(reference) as json_file:
+    with open(reference, encoding='utf-8') as json_file:
         law_template = json.load(json_file)
         return parse_json(law_template)
 
