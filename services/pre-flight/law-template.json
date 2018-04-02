@@ -5,5 +5,6 @@
     },
     "Specified" : {},
     "Certified" : {}
-  }
+  },
+  "requirement-upload" : { "name" : "Police approval" }
 }
