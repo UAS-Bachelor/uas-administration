@@ -2,18 +2,39 @@ import argparse
 import json
 import sys
 from os import system
+import AdvancedHTMLParser
 
-from flask import Flask, render_template
+from flask import Flask, render_template, render_template_string
 from requirements_parser import parseJSON
+from yattag import Doc, indent
 
 app = Flask(__name__)
+doc, tag, text = Doc().tagtext()
+parser = AdvancedHTMLParser.AdvancedHTMLParser()
 
 
 @app.route('/new-mission')
 def newMission():
-    #loadJSON()
-    print("test")
-    return render_template('new-mission.html', message=loadJSON())
+    # loadJSON()
+    with tag('head'):
+        with tag('script', src="__javascript__/test.js"):
+            pass
+    with tag('body'):
+        with tag('button', id='testMe', onclick='test.varToTest.changeText()'):
+            text("Tryk på mig")
+        with tag('h1', id='test1'):
+            text("Default text")
+
+    return render_template_string(doc.getvalue())
+
+
+class SomeTest:
+    def changeText(self):
+        print("Går ind i metode")
+        parser.getElementById('test1').innerHTML = 'Ny tekst - Det virker!'
+
+
+varToTest = SomeTest()
 
 
 def loadJSON():
