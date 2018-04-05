@@ -1,15 +1,16 @@
 import xml.etree.ElementTree as ET
 import re
 from requirement_types.supply_file import SupplyFile
-from requirement_types.choice import Choice
+from requirement_types.choice import Choice, Option
 
 regex = "(requirement)-(.+)"
 error = False
 error_msg = "Something went wrong."
+requirements = []
 
 
 def load_xml(path):
-    global error
+    global error, requirements
     error = False
 
     tree = ET.parse(path)
@@ -18,7 +19,7 @@ def load_xml(path):
 
     if error:
         return error_msg
-    return build_html(childs)
+    return build_html(requirements)
 
 
 def build_html(nodes):
@@ -30,7 +31,7 @@ def build_html(nodes):
 
 
 def parse_childs(root):
-    requirements = []
+    global requirements
     for child in root:
         requirement = re.match(regex, child.tag, re.IGNORECASE)
         requirement_type = requirement.group(2)
@@ -47,35 +48,48 @@ def parse_childs(root):
 
         else:
             global error, error_msg
-            error = True
-            error_msg = "The requirement tag: \"" + requirement_type + "\" is not recognized."
+            set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
     return requirements
 
 
-def parse_choice(child):
-    global error, error_msg
-    if not name_tag_error(child):
-        new_choice_requirement = Choice(child)
+def parse_choice(node):
+    if not name_tag_error(node):
+        new_choice_requirement = Choice(node.get('name'))
+        parse_choice_option(node)
         return new_choice_requirement
 
 
-def parse_supply_file(child):
-    global error, error_msg
-    if not name_tag_error(child):
-        new_supply_file_requirement = SupplyFile(child)
+def parse_choice_option(node):
+    for option in node:
+        if option.tag == "choice":
+            new_option = Option(option.get('name'))
+            print(new_option.name)
+            for child in option:
+                parse_childs(child)
+
+        else:
+            set_error("A choice requirement, can only consist of \"choice\" tags. Not \"" + option.tag + "\"")
+
+
+def parse_supply_file(node):
+    if not name_tag_error(node):
+        new_supply_file_requirement = SupplyFile(node.get('name'))
         return new_supply_file_requirement
 
 
 def name_tag_error(node):
-    global error_msg, error
     if node.get('name') is None:
-        error = True
-        error_msg = "The supply file element, needs to have a name!"
+        set_error("The supply file element, needs to have a name!")
         return True
 
     elif node.get('name') is "":
-        error = True
-        error_msg = "The supply file element, can not have an empty field"
+        set_error("The supply file element, can not have an empty field")
         return True
 
     return False
+
+
+def set_error(msg):
+    global error_msg, error
+    error = True
+    error_msg = msg
