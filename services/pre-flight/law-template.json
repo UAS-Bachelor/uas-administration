@@ -19,5 +19,6 @@
       }
     }
   },
-  "requirement-upload" : { "name" : "Police requirement" }
+  "requirement-upload" : { "name" : "Police requirement" },
+  "requirement-upload" : { "name" : "Police requirement2"}
 }

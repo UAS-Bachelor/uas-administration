@@ -1,0 +1,11 @@
+<requirements>
+    <requirement-choice name="Flight mode">
+
+    </requirement-choice>
+
+    <requirement-supply-file name="SORA">
+    </requirement-supply-file>
+
+    <requirement-supply-file name="Police approval">
+    </requirement-supply-file>
+</requirements>

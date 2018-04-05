@@ -5,13 +5,19 @@ from os import system
 
 from flask import Flask, render_template
 from requirements_parser import parse_json
+from template_parser import load_xml
 
 app = Flask(__name__)
 
 
 @app.route('/new-mission')
 def new_mission():
-    return render_template('new-mission.html', message=load_json())
+    return render_template('new-mission.html', message=load_parser())
+
+
+def load_parser():
+    xml_reference = 'services/pre-flight/template.xml'
+    return load_xml(xml_reference)
 
 
 def load_json():

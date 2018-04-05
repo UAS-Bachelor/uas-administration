@@ -1,6 +1,7 @@
 import re
 
 regex = "(requirement)-([a-å]+)"
+error = False
 
 
 def parse_json(json):
@@ -42,8 +43,18 @@ def __parse_radio(tree):
     options = tree['options'].items()
     for key, child in options:
         print("Tree key: " + key)
-        return_string += key + "\n"
-    return True, "Radio buttons: Name: " + tree['name'] + "<br />Values: " + return_string + "<br />"
+        return_string += "<br /> " + __parse_option(key, child)
+        #return_string += key + "\n"
+    return True, "Radio buttons: Name: " + tree['name'] + "<br />" + return_string + "<br />"
+
+
+def __parse_option(option, tree):
+    return_string = "Option for: " + option + " :: "
+    for key, child in tree.items():
+        result = re.match(regex, key, re.IGNORECASE)
+        print(__parse_requirement(result.group(2), child))
+        return_string += __parse_requirement(result.group(2), child)[1]
+    return return_string
 
 
 def __parse_upload(requirement):
