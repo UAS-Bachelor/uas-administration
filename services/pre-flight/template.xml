@@ -1,6 +1,14 @@
 <requirements>
     <requirement-choice name="Flight mode">
+        <choice name="Open">
 
+        </choice>
+        <choice name="Specified">
+
+        </choice>
+        <choice name="Certified">
+
+        </choice>
     </requirement-choice>
 
     <requirement-supply-file name="SORA">

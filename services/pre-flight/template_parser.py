@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import re
 from requirement_types.supply_file import SupplyFile
+from requirement_types.choice import Choice
 
 regex = "(requirement)-(.+)"
 error = False
@@ -40,7 +41,9 @@ def parse_childs(root):
                 requirements.append(new_requirement)
 
         elif requirement_type == "choice":
-            parse_choice(child)
+            new_requirement = parse_choice(child)
+            if new_requirement is not None:
+                requirements.append(new_requirement)
 
         else:
             global error, error_msg
@@ -50,20 +53,29 @@ def parse_childs(root):
 
 
 def parse_choice(child):
-    pass
+    global error, error_msg
+    if not name_tag_error(child):
+        new_choice_requirement = Choice(child)
+        return new_choice_requirement
 
 
 def parse_supply_file(child):
     global error, error_msg
+    if not name_tag_error(child):
+        new_supply_file_requirement = SupplyFile(child)
+        return new_supply_file_requirement
 
-    if child.get('name') is None:
+
+def name_tag_error(node):
+    global error_msg, error
+    if node.get('name') is None:
         error = True
         error_msg = "The supply file element, needs to have a name!"
+        return True
 
-    elif child.get('name') is "":
+    elif node.get('name') is "":
         error = True
         error_msg = "The supply file element, can not have an empty field"
+        return True
 
-    else:
-        new_supply_file_requirement = SupplyFile(child.get('name'))
-        return new_supply_file_requirement
+    return False
