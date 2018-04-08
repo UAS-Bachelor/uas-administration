@@ -7,7 +7,6 @@ class Choice(Requirement):
     def __init__(self, name):
         super(Choice, self).__init__(name)
         self.options = []
-        self.node = name
 
     def get_html(self):
         return_string = "Choice requirement: <br />Name: " + self.name + "<br /><br />"
