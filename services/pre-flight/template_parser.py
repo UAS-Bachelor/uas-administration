@@ -52,7 +52,7 @@ def parse_childs(node, parent):
 
 
 def parse_choice(node, parent):
-    if not name_tag_error(node):
+    if not name_tag_error(node, "Choice"):
         new_choice_requirement = Choice(node.get('name'))
         parent.add_child(new_choice_requirement)
         parse_choice_option(node, new_choice_requirement)
@@ -61,32 +61,28 @@ def parse_choice(node, parent):
 def parse_choice_option(node, parent_choice):
     for option in node:
         if option.tag == "choice":
-            new_option = Option(option.get('name'))
-            parent_choice.add_option(new_option)
-            #for child in option:
-            #    print("reached!")
-            #    print(new_option)
-            #    print(child)
-            parse_childs(option, new_option)
+            if not name_tag_error(option, "Choice option"):
+                new_option = Option(option.get('name'))
+                parent_choice.add_option(new_option)
+                parse_childs(option, new_option)
 
         else:
             set_error("A choice requirement, can only consist of \"choice\" tags. Not \"" + option.tag + "\"")
 
 
 def parse_supply_file(node, parent):
-    if not name_tag_error(node):
+    if not name_tag_error(node, "Supply file"):
         new_supply_file_requirement = SupplyFile(node.get('name'))
         parent.add_child(new_supply_file_requirement)
-        print(parent)
 
 
-def name_tag_error(node):
+def name_tag_error(node, requirement_type):
     if node.get('name') is None:
-        set_error("The supply file element, needs to have a name!")
+        set_error("The " + requirement_type + " requirement, needs to have a name!")
         return True
 
     elif node.get('name') is "":
-        set_error("The supply file element, can not have an empty field")
+        set_error("The " + requirement_type + " requirement, can not have an empty name field!")
         return True
 
     return False
