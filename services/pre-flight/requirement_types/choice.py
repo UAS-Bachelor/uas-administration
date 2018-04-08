@@ -17,7 +17,7 @@ class Choice(Requirement):
     def __build_options(self):
         return_string = ""
         for option in self.options:
-            return_string += option.build_html()
+            return_string += option.get_html()
         return return_string
 
     def add_option(self, option):
@@ -29,7 +29,7 @@ class Option(RequirementWithChildren):
     def __init__(self, name):
         super(Option, self).__init__(name)
 
-    def build_html(self):
+    def get_html(self):
         return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.get_children()))
         return_string += "<br />"
         for child in self.get_children():
