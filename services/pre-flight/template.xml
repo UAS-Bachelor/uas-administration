@@ -10,8 +10,8 @@
         </choice>
         <choice name="Certified">
             <requirement-choice name="Drone type">
-                <choice name="Type 1"></choice>
-                <choice name="Type 2"></choice>
+                <choice name="Type 1"/>
+                <choice name="Type 2"/>
             </requirement-choice>
         </choice>
     </requirement-choice>

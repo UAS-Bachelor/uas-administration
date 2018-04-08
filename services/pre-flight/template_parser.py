@@ -4,14 +4,13 @@ from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
 
-regex = "(requirement)-(.+)"
+__regex = "(requirement)-(.+)"
 __error = False
 __error_msg = "Something went wrong."
-requirements = []
 
 
 def load_xml(path):
-    global __error, requirements
+    global __error
     __error = False
 
     node_root = Root("Root")
@@ -34,9 +33,8 @@ def build_html(root):
 
 
 def parse_childs(node, parent):
-    global requirements
     for child in node:
-        requirement = re.match(regex, child.tag, re.IGNORECASE)
+        requirement = re.match(__regex, child.tag, re.IGNORECASE)
         requirement_type = requirement.group(2)
 
         if requirement_type == "supply-file":
@@ -48,7 +46,6 @@ def parse_childs(node, parent):
         else:
             global __error, __error_msg
             set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
-    return requirements
 
 
 def parse_choice(node, parent):
