@@ -1,4 +1,5 @@
 from .requirement_type import Requirement
+from .requirement_with_children import RequirementWithChildren
 
 
 class Choice(Requirement):
@@ -23,21 +24,14 @@ class Choice(Requirement):
         self.options.append(option)
 
 
-class Option:
+class Option(RequirementWithChildren):
 
     def __init__(self, name):
-        self.child_list = []
-        self.name = name
-
-    def add_child(self, child):
-        self.child_list.append(child)
-
-    def get_children(self):
-        return self.child_list
+        super(Option, self).__init__(name)
 
     def build_html(self):
-        return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.child_list))
+        return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.get_children()))
         return_string += "<br />"
-        for child in self.child_list:
+        for child in self.get_children():
             return_string += child.get_html() + "<br />"
         return return_string

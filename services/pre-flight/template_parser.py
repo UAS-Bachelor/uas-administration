@@ -35,17 +35,20 @@ def build_html(root):
 def parse_childs(node, parent):
     for child in node:
         requirement = re.match(__regex, child.tag, re.IGNORECASE)
-        requirement_type = requirement.group(2)
 
-        if requirement_type == "supply-file":
-            parse_supply_file(child, parent)
-
-        elif requirement_type == "choice":
-            parse_choice(child, parent)
-
+        if requirement is None:
+            set_error("The requirement tag: \"" + child.tag + "\" is not recognized.")
         else:
-            global __error, __error_msg
-            set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
+            requirement_type = requirement.group(2)
+
+            if requirement_type == "supply-file":
+                parse_supply_file(child, parent)
+
+            elif requirement_type == "choice":
+                parse_choice(child, parent)
+
+            else:
+                set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
 
 
 def parse_choice(node, parent):
