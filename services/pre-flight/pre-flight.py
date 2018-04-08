@@ -1,10 +1,8 @@
 import argparse
-import json
 import sys
 from os import system
 
 from flask import Flask, render_template
-from requirements_parser import parse_json
 from template_parser import load_xml
 
 app = Flask(__name__)
@@ -18,13 +16,6 @@ def new_mission():
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'
     return load_xml(xml_reference)
-
-
-def load_json():
-    reference = 'services/pre-flight/law-template.json'
-    with open(reference, encoding='utf-8') as json_file:
-        law_template = json.load(json_file)
-        return parse_json(law_template)
 
 
 if __name__ == '__main__':
