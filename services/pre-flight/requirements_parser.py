@@ -1,7 +1,7 @@
 import re
 
 regex = "(requirement)-([a-å]+)"
-error = False
+__error = False
 
 
 def parse_json(json):

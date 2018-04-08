@@ -7,4 +7,4 @@ class SupplyFile(Requirement):
         super(SupplyFile, self).__init__(name)
 
     def get_html(self):
-        return "Supply file requirement: <br />Name: " + self.name
+        return "Supply file requirement: <br />Name: " + self.name + "<br />"

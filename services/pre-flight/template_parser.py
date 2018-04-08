@@ -2,79 +2,82 @@ import xml.etree.ElementTree as ET
 import re
 from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
+from requirement_types.root import Root
 
 regex = "(requirement)-(.+)"
-error = False
-error_msg = "Something went wrong."
+__error = False
+__error_msg = "Something went wrong."
 requirements = []
 
 
 def load_xml(path):
-    global error, requirements
-    error = False
+    global __error, requirements
+    __error = False
+
+    node_root = Root("Root")
 
     tree = ET.parse(path)
     root = tree.getroot()
-    childs = parse_childs(root)
+    parse_childs(root, node_root)
 
-    if error:
-        return error_msg
-    return build_html(requirements)
+    if __error:
+        return __error_msg
+    return build_html(node_root)
 
 
-def build_html(nodes):
+def build_html(root):
     return_string = ""
-    for node in nodes:
-        return_string += node.get_html() + "<br /><br />"
+    for node in root.get_children():
+        return_string += node.get_html() + "<br />"
 
     return return_string
 
 
-def parse_childs(root):
+def parse_childs(node, parent):
     global requirements
-    for child in root:
+    for child in node:
         requirement = re.match(regex, child.tag, re.IGNORECASE)
         requirement_type = requirement.group(2)
 
         if requirement_type == "supply-file":
-            new_requirement = parse_supply_file(child)
-            if new_requirement is not None:
-                requirements.append(new_requirement)
+            parse_supply_file(child, parent)
 
         elif requirement_type == "choice":
-            new_requirement = parse_choice(child)
-            if new_requirement is not None:
-                requirements.append(new_requirement)
+            parse_choice(child, parent)
 
         else:
-            global error, error_msg
+            global __error, __error_msg
             set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
     return requirements
 
 
-def parse_choice(node):
+def parse_choice(node, parent):
     if not name_tag_error(node):
         new_choice_requirement = Choice(node.get('name'))
-        parse_choice_option(node)
-        return new_choice_requirement
+        parent.add_child(new_choice_requirement)
+        parse_choice_option(node, new_choice_requirement)
 
 
-def parse_choice_option(node):
+def parse_choice_option(node, parent_choice):
     for option in node:
         if option.tag == "choice":
             new_option = Option(option.get('name'))
-            print(new_option.name)
-            for child in option:
-                parse_childs(child)
+            parent_choice.add_option(new_option)
+            #for child in option:
+            #    print("reached!")
+            #    print(new_option)
+            #    print(child)
+            parse_childs(option, new_option)
 
         else:
             set_error("A choice requirement, can only consist of \"choice\" tags. Not \"" + option.tag + "\"")
 
 
-def parse_supply_file(node):
+def parse_supply_file(node, parent):
     if not name_tag_error(node):
         new_supply_file_requirement = SupplyFile(node.get('name'))
-        return new_supply_file_requirement
+        parent.add_child(new_supply_file_requirement)
+        print(parent)
 
 
 def name_tag_error(node):
@@ -90,6 +93,6 @@ def name_tag_error(node):
 
 
 def set_error(msg):
-    global error_msg, error
-    error = True
-    error_msg = msg
+    global __error_msg, __error
+    __error = True
+    __error_msg = msg
