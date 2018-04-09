@@ -1,0 +1,21 @@
+<requirements>
+    <requirement-map name="Flight zone"/>
+    <requirement-choice name="Flight mode">
+        <choice name="Open">
+            <requirement-supply-file name="Niclas er nice" />
+        </choice>
+        <choice name="Specified">
+            <requirement-supply-file name="Anton er nice" />
+
+        </choice>
+        <choice name="Certified">
+            <requirement-choice name="Drone type">
+                <choice name="Type 1"/>
+                <choice name="Type 2"/>
+            </requirement-choice>
+        </choice>
+    </requirement-choice>
+
+    <requirement-supply-file name="SORA" />
+    <requirement-supply-file name="Police approval" />
+</requirements>
