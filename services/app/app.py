@@ -30,6 +30,14 @@ def newMission():
     return render_template('layout.html', html=newMission)
 
 
+@app.route('/map')
+def map_service():
+    try:
+        map_service = requests.get('http://127.0.0.1:5004/map-service').text
+    except requests.exceptions.ConnectionError:
+        return 'Map service unavailable'
+    return render_template('layout.html', html=map_service)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--port', type=int, default=5003,

@@ -13,6 +13,11 @@ def new_mission():
     return render_template('new-mission.html', message=load_parser())
 
 
+@app.route('/map-service')
+def map_service():
+    return render_template('map_service.html')
+
+
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'
     return load_xml(xml_reference)
