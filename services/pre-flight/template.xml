@@ -1,8 +1,8 @@
 <requirements>
+    <requirement-map name="Flight zone"/>
     <requirement-choice name="Flight mode">
         <choice name="Open">
             <requirement-supply-file name="Niclas er nice" />
-
         </choice>
         <choice name="Specified">
             <requirement-supply-file name="Anton er nice" />

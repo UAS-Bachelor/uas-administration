@@ -3,6 +3,7 @@ import re
 from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
+from requirement_types.map import Map
 
 __regex = "(requirement)-(.+)"
 __error = False
@@ -47,8 +48,20 @@ def parse_childs(node, parent):
             elif requirement_type == "choice":
                 parse_choice(child, parent)
 
+            elif requirement_type == "map":
+                parse_map(child, parent)
+
             else:
                 set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
+
+
+def parse_map(node, parent):
+    if isinstance(parent, Root):
+        if not name_tag_error(node, "Map"):
+            new_map_requirement = Map(node.get('name'))
+            parent.add_child(new_map_requirement)
+    else:
+        set_error("The map requirement can only be a child of root not \"" + parent.name + "\".") #Might wanna add type to object
 
 
 def parse_choice(node, parent):
