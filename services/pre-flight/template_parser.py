@@ -4,11 +4,11 @@ from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
 from requirement_types.map import Map
+from yattag import Doc 
 
 __regex = "(requirement)-(.+)"
 __error = False
 __error_msg = "Something went wrong."
-
 
 def load_xml(path):
     global __error
@@ -26,11 +26,12 @@ def load_xml(path):
 
 
 def build_html(root):
-    return_string = ""
-    for node in root.get_children():
-        return_string += node.get_html() + "<br />"
+    doc, tag, text = Doc().tagtext()
+    with tag('form', name='overall'):
+        for node in root.get_children():
+            doc.asis(node.get_html() + "<br />")
 
-    return return_string
+    return doc.getvalue()
 
 
 def parse_childs(node, parent):

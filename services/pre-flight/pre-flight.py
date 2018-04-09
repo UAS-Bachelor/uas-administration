@@ -16,8 +16,6 @@ parser = AdvancedHTMLParser.AdvancedHTMLParser()
 def new_mission():
     return render_template('new-mission.html', message=load_parser())
 
-    return render_template_string(doc.getvalue())
-
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'
     return load_xml(xml_reference)
