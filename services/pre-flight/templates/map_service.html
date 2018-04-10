@@ -49,13 +49,42 @@
           }
         });
         drawingManager.setMap(map);
+        var coords = [];
+        var figureDrawn = false;
         google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-            event.overlay.getPath().forEach(i)
+            if(!figureDrawn) {
+                if(event.overlay.getPath().length > 2) {
+                    event.overlay.getPath().forEach(i);
+                    //console.log(coords)
+                    calculateCenter()
+                    figureDrawn = true;
+                }
+                else {
+                    console.log("Hovhov, du har kun tegnet en streg!")
+                    event.overlay.setMap(null);
+                }
+            }
+            else {
+                console.log("Hovhov, du har allerede tegnet!")
+                //event.overlay.setMap(null);
+            }
         });
 
-        var i = function(e, index) {
-            //console.log(e)
-            console.log("lat: " + e.lat() + "; lon: " + e.lng())
+        function i(e, index) {
+            var ob = {lat: e.lat(), lng: e.lng()};
+            var lat = e.lat();
+            var lng = e.lng();
+            var latlng = new google.maps.LatLng(lat, lng);
+            coords.push(latlng)
+        }
+
+        function calculateCenter() {
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0; i < coords.length; i++) {
+                bounds.extend(coords[i]);
+            }
+            console.log("Center: " + bounds.getCenter());
+            return bounds.getCenter();
         }
       }
     </script>
