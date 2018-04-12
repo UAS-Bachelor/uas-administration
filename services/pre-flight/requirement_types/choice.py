@@ -32,11 +32,10 @@ class Option(RequirementWithChildren):
         doc, tag, text = Doc().tagtext()
         #return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.get_children()))
         #return_string += "<br />"
+        iteration = 1
         for child in self.get_children():
-            #return_string += child.get_html() + "<br />"
-            #doc.stag('input', type='radio', name=name, onclick=template.handleRadioButtons.test())
-            doc.asis('<input type="radio" name="'+name+'" onclick=template.handleRadioButtons.test()/>')
+            doc.asis("<input type=\"radio\" name=\""+name+"\" onclick=\"template.handleRadioButtons.test('"+self.name+"')\"/>")
             text(self.name)
-            with tag('div', id='test', style='display:none'):
+            with tag('div', id=self.name, style='display:none'):
                 doc.asis(child.get_html() + "<br />")
         return doc.getvalue()

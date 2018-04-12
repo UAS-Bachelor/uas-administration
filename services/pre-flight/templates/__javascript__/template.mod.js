@@ -2,8 +2,8 @@
 		var __name__ = '__main__';
 		var HandleRadioButtons = __class__ ('HandleRadioButtons', [object], {
 			__module__: __name__,
-			get test () {return __get__ (this, function (self) {
-				document.getElementById ('test').style.display ('block');
+			get test () {return __get__ (this, function (self, id) {
+				document.getElementById (id).style.display = 'block';
 			});}
 		});
 		var handleRadioButtons = HandleRadioButtons ();

@@ -1,6 +1,8 @@
 class HandleRadioButtons:
     
-    def test(self):
-        document.getElementById("test").style.display('block'); 
+    def test(self, id):
+        
+        document.getElementById(id).style.display = 'block'
+
 
 handleRadioButtons = HandleRadioButtons()
