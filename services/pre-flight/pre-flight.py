@@ -10,13 +10,13 @@ app = Flask(__name__)
 
 @app.route('/new-mission')
 def new_mission():
-    return render_template('new-mission.html', message=load_parser())
+    return render_template('new-mission.html', message=load_parser(), map=map_service())
 
 
-@app.route('/map-service')
+#@app.route('/map-service')
 def map_service():
     #return render_template('map_service.html')
-    return render_template('open_layers_map.html')
+    return render_template('open_layers_map.html', bufferSize=200)
 
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'

@@ -8,13 +8,7 @@
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 </head>
 <body>
-<div id="map" class="map" style="height: 90%;"></div>
-<form class="form-inline">
-    <label>Geometry type &nbsp;</label>
-    <select id="type">
-        <option value="Circle">Circle</option>
-    </select>
-</form>
+<div id="map" class="map" style="height: 400px; width: 800px"></div>
 <script>
     var raster = new ol.layer.Tile({
         source: new ol.source.OSM()
@@ -77,10 +71,9 @@
         })
     });
 
-    const bufferSize = 50;
+    const bufferSize = {{ bufferSize }};
     const bufferId = "bufferCircleId";
     var draw, buffer; // global so we can remove them later
-    var typeSelect = document.getElementById('type');
     var modify = new ol.interaction.Modify({
         source: source
     });
@@ -90,7 +83,7 @@
     function addInteractions() {
         draw = new ol.interaction.Draw({
             source: source,
-            type: typeSelect.value
+            type: "Circle"
         });
 
         draw.on('drawend', function (e) {
