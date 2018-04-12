@@ -8,6 +8,8 @@ class HandleRadioButtons:
 
         for choice in choices:
             choice.style.display = 'none'
+            for element in choice.children:
+                console.log(element)
 
         if chosen.checked:
             div.style.display = 'block'

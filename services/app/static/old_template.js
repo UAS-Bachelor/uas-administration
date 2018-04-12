@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-04-12 14:19:21
+// Transcrypt'ed from Python, 2018-04-12 15:20:19
 function template () {
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2210,6 +2210,11 @@ function template () {
 				for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
 					var choice = __iterable0__ [__index0__];
 					choice.style.display = 'none';
+					var __iterable1__ = choice.children;
+					for (var __index1__ = 0; __index1__ < len (__iterable1__); __index1__++) {
+						var element = __iterable1__ [__index1__];
+						console.log (element);
+					}
 				}
 				if (chosen.checked) {
 					div.style.display = 'block';

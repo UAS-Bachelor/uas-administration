@@ -18,10 +18,10 @@ class Choice(Requirement):
         
         for radio_option in self.options:
             choiceID = self.name+radio_option.name
-            doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" onchange=\"template.handleRadioButtons.test('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
+            doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" onchange=\"changeVisibility('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
             text(radio_option.name)
         for option in self.options:
-            option.get_html(name, doc, tag, text)
+            option.append_html(name, doc, tag, text)
         return doc.getvalue()
 
     def add_option(self, option):
@@ -33,7 +33,7 @@ class Option(RequirementWithChildren):
     def __init__(self, name):
         super(Option, self).__init__(name)
 
-    def get_html(self, name, doc, tag, text):
+    def append_html(self, name, doc, tag, text):
         #return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.get_children()))
         #return_string += "<br />"
         for child in self.get_children():
