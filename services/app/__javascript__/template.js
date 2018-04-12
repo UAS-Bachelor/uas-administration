@@ -1,5 +1,5 @@
 "use strict";
-// Transcrypt'ed from Python, 2018-04-11 15:00:45
+// Transcrypt'ed from Python, 2018-04-12 14:19:21
 function template () {
     var __symbols__ = ['__py3.6__', '__esv5__'];
     var __all__ = {};
@@ -2202,8 +2202,18 @@ function template () {
 		var __name__ = '__main__';
 		var HandleRadioButtons = __class__ ('HandleRadioButtons', [object], {
 			__module__: __name__,
-			get test () {return __get__ (this, function (self, id) {
-				document.getElementById (id).style.display = 'block';
+			get test () {return __get__ (this, function (self, divId, choiceId, py_name) {
+				var div = document.getElementById (divId);
+				var chosen = document.getElementById (choiceId);
+				var choices = document.getElementsByClassName (py_name);
+				var __iterable0__ = choices;
+				for (var __index0__ = 0; __index0__ < len (__iterable0__); __index0__++) {
+					var choice = __iterable0__ [__index0__];
+					choice.style.display = 'none';
+				}
+				if (chosen.checked) {
+					div.style.display = 'block';
+				}
 			});}
 		});
 		var handleRadioButtons = HandleRadioButtons ();

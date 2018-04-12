@@ -14,28 +14,29 @@ class Choice(Requirement):
         return return_string
 
     def __build_options(self, name):
-        return_string = ""
+        doc, tag, text = Doc().tagtext()
+        
+        for radio_option in self.options:
+            choiceID = self.name+radio_option.name
+            doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" onchange=\"template.handleRadioButtons.test('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
+            text(radio_option.name)
         for option in self.options:
-            return_string += option.get_html(name)
-        return return_string
+            option.get_html(name, doc, tag, text)
+        return doc.getvalue()
 
     def add_option(self, option):
         self.options.append(option)
 
 
 class Option(RequirementWithChildren):
-
+    
     def __init__(self, name):
         super(Option, self).__init__(name)
 
-    def get_html(self, name):
-        doc, tag, text = Doc().tagtext()
+    def get_html(self, name, doc, tag, text):
         #return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.get_children()))
         #return_string += "<br />"
-        iteration = 1
         for child in self.get_children():
-            doc.asis("<input type=\"radio\" name=\""+name+"\" onclick=\"template.handleRadioButtons.test('"+self.name+"')\"/>")
-            text(self.name)
-            with tag('div', id=self.name, style='display:none'):
+            with tag('div', id=self.name, klass=name, style='display:none'):
                 doc.asis(child.get_html() + "<br />")
-        return doc.getvalue()
+
