@@ -15,8 +15,8 @@ def new_mission():
 
 @app.route('/map-service')
 def map_service():
-    return render_template('map_service.html')
-
+    #return render_template('map_service.html')
+    return render_template('open_layers_map.html')
 
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'

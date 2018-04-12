@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Draw and Modify Features</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+</head>
+<body>
+<div id="map" class="map" style="height: 90%;"></div>
+<form class="form-inline">
+    <label>Geometry type &nbsp;</label>
+    <select id="type">
+        <option value="Circle">Circle</option>
+    </select>
+</form>
+<script>
+    var raster = new ol.layer.Tile({
+        source: new ol.source.OSM()
+    });
+
+    var editableStyle = [
+        new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#59a9ff',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.6)'
+            })
+        }),
+        new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({
+                    color: '#4eccff'
+                })
+            }),
+            geometry: function (feature) {
+                var center = feature.getGeometry().getCenter();
+                return new ol.geom.Point(center);
+            }
+        })
+    ];
+
+    var uneditableStyle = [
+        new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#C4C4C4',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            })
+        })
+    ];
+
+    var source = new ol.source.Vector();
+    var vector = new ol.layer.Vector({
+        source: source,
+        style: editableStyle
+    });
+
+    var bufferSource = new ol.source.Vector();
+    var bufferVector = new ol.layer.Vector({
+        source: bufferSource,
+        style: uneditableStyle
+    });
+
+    var map = new ol.Map({
+        layers: [raster, vector, bufferVector],
+        target: 'map',
+        view: new ol.View({
+            center: ol.proj.fromLonLat([10.4283, 55.3688]),
+            zoom: 16
+        })
+    });
+
+    const bufferSize = 50;
+    const bufferId = "bufferCircleId";
+    var draw, buffer; // global so we can remove them later
+    var typeSelect = document.getElementById('type');
+    var modify = new ol.interaction.Modify({
+        source: source
+    });
+
+    map.addInteraction(modify);
+
+    function addInteractions() {
+        draw = new ol.interaction.Draw({
+            source: source,
+            type: typeSelect.value
+        });
+
+        draw.on('drawend', function (e) {
+            var circle = e.feature.getGeometry();
+            drawBuffer(circle.getCenter(), circle.getRadius(), circle.getLayout());
+            map.removeInteraction(draw);
+
+            circle.on('change', function (e) {
+                updateBuffer(e.target);
+            });
+        });
+
+        map.addInteraction(draw);
+    }
+
+    function drawBuffer(center, radius) {
+        radius = radius + bufferSize;
+        buffer = new ol.geom.Circle(center, radius);
+        var feature = new ol.Feature({
+            geometry: buffer
+        });
+        feature.setId(bufferId);
+        bufferSource.addFeature(feature);
+    }
+
+    function updateBuffer(circle) {
+        var bufferCircle = bufferSource.getFeatureById(bufferId).getGeometry();
+
+        bufferCircle.setCenter(circle.getCenter());
+        bufferCircle.setRadius(circle.getRadius() + bufferSize);
+    }
+
+    addInteractions();
+</script>
+</body>
+</html>
