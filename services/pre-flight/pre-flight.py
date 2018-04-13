@@ -1,11 +1,15 @@
 import argparse
 import sys
 from os import system
+import AdvancedHTMLParser
 
 from flask import Flask, render_template
 from template_parser import load_xml
+from yattag import Doc, indent
 
 app = Flask(__name__)
+doc, tag, text = Doc().tagtext()
+parser = AdvancedHTMLParser.AdvancedHTMLParser()
 
 
 @app.route('/new-mission')

@@ -1,5 +1,5 @@
 from .requirement_type import Requirement
-
+from yattag import Doc
 
 class SupplyFile(Requirement):
 
@@ -7,4 +7,10 @@ class SupplyFile(Requirement):
         super(SupplyFile, self).__init__(name)
 
     def get_html(self):
-        return "Supply file requirement: <br />Name: " + self.name + "<br />"
+        doc, tag, text = Doc().tagtext()
+        with tag('div'):
+            text(self.name)
+            doc.stag('input', type='file', name='upload-file')
+        return doc.getvalue()
+        
+        #"Supply file requirement: <br />Name: " + self.name + "<br />"
