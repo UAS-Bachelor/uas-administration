@@ -14,13 +14,13 @@ parser = AdvancedHTMLParser.AdvancedHTMLParser()
 
 @app.route('/new-mission')
 def new_mission():
-    return render_template('new-mission.html', message=load_parser(), map=map_service())
+    return render_template('new-mission.html', message=load_parser())
 
 
 #@app.route('/map-service')
 def map_service():
     #return render_template('map_service.html')
-    return render_template('open_layers_map.html', bufferSize=200)
+    return render_template('open_layers_map.html', bufferSize=50)
 
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'

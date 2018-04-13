@@ -59,8 +59,12 @@ def parse_childs(node, parent):
 def parse_map(node, parent):
     if isinstance(parent, Root):
         if not name_tag_error(node, "Map"):
-            new_map_requirement = Map(node.get('name'))
-            parent.add_child(new_map_requirement)
+            if node.get('safetyzoneSize') is None:
+                set_error("The map requirement must have a safety zone size!")
+            else:
+                new_map_requirement = Map(node.get('name'))
+                new_map_requirement.setSafetyzoneSize(node.get('safetyzoneSize'))
+                parent.add_child(new_map_requirement)
     else:
         set_error("The map requirement can only be a child of root not \"" + parent.name + "\".") #Might wanna add type to object
 

@@ -1,5 +1,5 @@
 <requirements>
-    <requirement-map name="Flight zone"/>
+    <requirement-map name="Flight zone" safetyzoneSize="50"/>
     <requirement-choice name="Flight mode">
         <choice name="Open">
             <requirement-supply-file name="Niclas er nice" />
