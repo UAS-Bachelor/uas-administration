@@ -27,9 +27,11 @@ def load_xml(path):
 
 def build_html(root):
     doc, tag, text = Doc().tagtext()
-    with tag('form', name='overall'):
+    root_id = "root-form"
+    with tag('form', name='overall', id=root_id):
         for node in root.get_children():
             doc.asis(node.get_html() + "<br />")
+        doc.stag('input', type="button", value="Create mission", onclick='validateSubmit("' + root_id + '")')
 
     return doc.getvalue()
 
@@ -82,7 +84,10 @@ def parse_choice_option(node, parent_choice):
             if not name_tag_error(option, "Choice option"):
                 new_option = Option(option.get('name'))
                 parent_choice.add_option(new_option)
-                parse_childs(option, new_option)
+                if(len(option) == 0):
+                    set_error("A choice can not have zero children!")
+                else:
+                    parse_childs(option, new_option)
 
         else:
             set_error("A choice requirement, can only consist of \"choice\" tags. Not \"" + option.tag + "\"")

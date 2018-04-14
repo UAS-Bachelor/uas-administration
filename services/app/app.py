@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 import sys
 import argparse
@@ -22,12 +22,12 @@ def login():
 
 
 @app.route('/new-mission')
-def newMission():
+def new_mission():
     try:
-        newMission = requests.get('http://127.0.0.1:5004/new-mission').text
+        new_mission_request = requests.get('http://127.0.0.1:5004/new-mission').text
     except requests.exceptions.ConnectionError:
         return 'New Mission service unavailable'
-    return render_template('layout.html', html=newMission)
+    return render_template('layout.html', html=new_mission_request)
 
 
 @app.route('/map')
@@ -37,6 +37,14 @@ def map_service():
     except requests.exceptions.ConnectionError:
         return 'Map service unavailable'
     return render_template('layout.html', html=map_service)
+
+
+@app.route('/validate-mission', methods=['POST'])
+def validate_mission():
+    response_to_validate = request.get_data()
+    print(response_to_validate)
+    requests.post('http://127.0.0.1:5004/validate-mission', data=response_to_validate)
+    return ""
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

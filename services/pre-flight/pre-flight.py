@@ -3,7 +3,7 @@ import sys
 from os import system
 import AdvancedHTMLParser
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from template_parser import load_xml
 from yattag import Doc, indent
 
@@ -17,10 +17,10 @@ def new_mission():
     return render_template('new-mission.html', message=load_parser())
 
 
-#@app.route('/map-service')
-def map_service():
-    #return render_template('map_service.html')
-    return render_template('open_layers_map.html', bufferSize=50)
+@app.route('/validate-mission', methods=['POST'])
+def validate():
+    print(request.get_data())
+    return ""
 
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'
