@@ -18,8 +18,13 @@ class Choice(Requirement):
         
         for radio_option in self.options:
             choiceID = self.name+radio_option.name
-            doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" onchange=\"changeVisibility('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
-            text(radio_option.name)
+            with tag('ul', klass='ul'):
+                with tag('li', klass='lines'):
+                    doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" class=\"choice\" onchange=\"changeVisibility('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
+                    doc.asis("<label for=\""+choiceID+"\">"+radio_option.name+"</label>")
+                    with tag('div', klass='choicebutton'):
+                        pass
+            #text(radio_option.name)
         for option in self.options:
             option.append_html(name, doc, tag, text)
         return doc.getvalue()

@@ -1,0 +1,86 @@
+body {
+    font-size: 20;
+}
+
+h1 {
+    margin-left: 20px;
+    margin-bottom: 3%;
+    margin-top: 2%;
+}
+
+form {
+    margin-left: 20px;
+}
+
+.ul {
+    display: inline-block;
+    margin-left: 0;
+}
+
+.ul li{
+    color: #AAAAAA;
+    display: inline-block;
+    position: relative;
+}
+
+.ul li input[type=radio]{
+    position: absolute;
+    visibility: hidden;
+}
+
+.ul li label {
+    float: right;
+    font-weight: 200;
+    font-size: 1.35em;
+    margin-left: 40px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    z-index: 9;
+    cursor: pointer;
+    -webkit-transition: all 0.25s linear;
+}
+
+.ul li:hover label{
+    color: darkblue;
+}
+
+.ul li .choicebutton {
+    position: absolute;
+    margin-top: 5px;
+    border: 5px solid #AAAAAA;
+    border-radius: 100%;
+    height: 25px;
+    width: 25px;
+	z-index: 5;
+	transition: border .25s linear;
+	-webkit-transition: border .25s linear;
+}
+
+.ul li:hover .choicebutton{
+    border: 5px solid darkblue;
+}
+
+.ul li .choicebutton::before {
+    position: inherit;
+	content: '';
+    border-radius: 100%;
+    height: 11px;
+    width: 11px;
+    top: 2px;
+	left: 2px;
+	transition: background 0.25s linear;
+	-webkit-transition: background 0.25s linear;
+}
+
+input[type=radio]:checked ~ .choicebutton {
+    border: 5px solid blue;
+  }
+
+input[type=radio]:checked ~ .choicebutton::before {
+    background: blue;
+}
+
+input[type=radio]:checked ~ label {
+    color: blue;
+}
