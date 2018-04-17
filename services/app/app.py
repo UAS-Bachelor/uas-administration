@@ -44,6 +44,12 @@ def map_service():
 @app.route('/save-mission', methods=['POST'])
 def save_mission():
     current_directory = os.path.dirname(os.path.realpath(__file__)) + "/uploads/"
+    form_data = request.form.copy()
+    print(request.form)
+    print(request.files)
+    form_list = form_data.keys()
+    # for o in form_list:
+    # print(o)
     form_data_files = request.files.copy()
     form_list_files = form_data_files.keys()
     current_time = datetime.now().strftime('%Y-%m-%d %H.%M.%S')
@@ -53,9 +59,9 @@ def save_mission():
     for e in form_list_files:
         response_to_validate = request.files[e]
         save_location = new_dir + "/" + response_to_validate.filename
-        response_to_validate.save(save_location)
+        # response_to_validate.save(save_location)
 
-    #requests.post('http://127.0.0.1:5004/validate-mission', data=response_to_validate)
+    requests.post('http://127.0.0.1:5004/save-mission', files=request.files)
     return ""
 
 

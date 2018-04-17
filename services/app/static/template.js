@@ -43,9 +43,8 @@ function sendData(valuesToSend) {
 
 
     let request = new XMLHttpRequest();
-    request.open("POST", "/save-mission");
+    request.open("POST", "http://127.0.0.1:5004/save-mission");
     request.send(formData);
-    console.log("Sent");
 }
 
 function validateChildren(parent, valuesToSubmit) {
