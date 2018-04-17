@@ -5,6 +5,7 @@ import AdvancedHTMLParser
 import os
 from datetime import datetime
 from flask_cors import cross_origin
+import json
 
 from flask import Flask, render_template, request
 from template_parser import load_xml
@@ -23,12 +24,14 @@ def new_mission():
 @app.route('/save-mission', methods=['POST'])
 def save_mission():
     current_directory = os.path.dirname(os.path.realpath(__file__)) + "/uploads/"
+
+    data_to_save = {}
+    files = []
+
     form_data = request.form.copy()
-    print(request.form)
-    print(request.files)
     form_list = form_data.keys()
-    # for o in form_list:
-    # print(o)
+    for key in form_list:
+        data_to_save[key] = form_data[key]
     form_data_files = request.files.copy()
     form_list_files = form_data_files.keys()
     current_time = datetime.now().strftime('%Y-%m-%d %H.%M.%S')
@@ -36,9 +39,18 @@ def save_mission():
     if not os.path.exists(new_dir):
         os.mkdir(new_dir)
     for e in form_list_files:
+        print(e)
         response_to_validate = request.files[e]
         save_location = new_dir + "/" + response_to_validate.filename
         response_to_validate.save(save_location)
+        files.append({
+            'name': e,
+            'location': save_location
+        })
+
+    data_to_save['files'] = files
+    json_data = json.dumps(data_to_save)
+    print(json_data)
     return ""
 
 
