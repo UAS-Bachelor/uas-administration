@@ -22,6 +22,7 @@ def validate():
     print(request.get_data())
     return ""
 
+
 def load_parser():
     xml_reference = 'services/pre-flight/template.xml'
     return load_xml(xml_reference)

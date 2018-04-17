@@ -4,6 +4,7 @@ import sys
 import argparse
 from os import system
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -42,17 +43,21 @@ def map_service():
 
 @app.route('/save-mission', methods=['POST'])
 def save_mission():
-    current_directory = os.path.dirname(os.path.realpath(__file__))
-    response_to_validate = request.files['sora']
-    form_data = request.files.copy()
-    form_list = form_data.keys()
-    for e in form_list:
-        print(e)
-    save_location = current_directory + "/uploads/" + response_to_validate.filename
+    current_directory = os.path.dirname(os.path.realpath(__file__)) + "/uploads/"
+    form_data_files = request.files.copy()
+    form_list_files = form_data_files.keys()
+    current_time = datetime.now().strftime('%Y-%m-%d %H.%M.%S')
+    new_dir = current_directory + current_time
+    if not os.path.exists(new_dir):
+        os.mkdir(new_dir)
+    for e in form_list_files:
+        response_to_validate = request.files[e]
+        save_location = new_dir + "/" + response_to_validate.filename
+        response_to_validate.save(save_location)
 
-    response_to_validate.save(save_location)
     #requests.post('http://127.0.0.1:5004/validate-mission', data=response_to_validate)
     return ""
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

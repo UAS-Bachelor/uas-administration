@@ -11,7 +11,7 @@ class SupplyFile(Requirement):
         with tag('div'):
             text(self.name)
             stripped_name = self.name.replace(" ", "-")
-            doc.stag('input', type='file', name='upload-file-'+stripped_name)
+            doc.stag('input', type='file', id='upload-file-'+stripped_name, name=stripped_name)
         return doc.getvalue()
         
         #"Supply file requirement: <br />Name: " + self.name + "<br />"

@@ -1,9 +1,9 @@
 function changeVisibility(divId, choiceId, name) {
-    var div = document.getElementById(divId)
-    var chosen = document.getElementById(choiceId)
-    var choices = document.getElementsByClassName(name)
+    let div = document.getElementById(divId)
+    let chosen = document.getElementById(choiceId)
+    let choices = document.getElementsByClassName(name)
 
-    for (var i = 0; i < choices.length; i++) {
+    for (let i = 0; i < choices.length; i++) {
         choices[i].style.display = 'none'
     }
     if (chosen.checked) {
@@ -14,79 +14,77 @@ function changeVisibility(divId, choiceId, name) {
 function resetInputs(parent) {
 }
 
-function submitMission(rootId) {
-    var childElements = document.getElementById(rootId).elements;
-    for (var i = 0; i < childElements.length; i++) {
-        var type = childElements[i].getAttribute("type");
-
-        console.log(childElements[i]);
-        console.log(childElements[i].getAttribute("type"));
-        console.log("");
-    }
-    validateSubmit(rootId)
-}
-
 function validateSubmit(rootId) {
-    var id = "#"+rootId;
-    var valuesToSubmit = { errors: false};
+    let id = "#" + rootId;
+    let valuesToSubmit = {errors: false};
     validateChildren(id, valuesToSubmit);
-    console.log(valuesToSubmit);
 
-    if(valuesToSubmit.errors) {
+    if (valuesToSubmit.errors) {
         document.getElementById("errorMessage").style.display = "block";
     }
     else {
-
+        delete valuesToSubmit.errors;
+        sendData(valuesToSubmit);
     }
-    sendData();
 }
 
-function sendData() {
-    var formData = new FormData();
-    var input = document.getElementsByName("upload-file-SORA")[0];
+function sendData(valuesToSend) {
+    let formData = new FormData();
 
-    formData.append("sora", input.files[0]);
+    for (const [key, value] of Object.entries(valuesToSend)) {
+        if (value instanceof HTMLInputElement) {
+            let file = value.files[0];
+            formData.append(key, file);
+        }
+        else {
+            formData.append(key, value);
+        }
+    }
 
-    //console.log(formData);
-    var request = new XMLHttpRequest();
+
+    let request = new XMLHttpRequest();
     request.open("POST", "/save-mission");
     request.send(formData);
+    console.log("Sent");
 }
 
 function validateChildren(parent, valuesToSubmit) {
-    var errors = false;
     $(parent).children().filter("div").each(function () {
-        var children = $(this).children().filter("input");
-        console.log("Children: " + children.attr("type") + " " + children.attr("name"));
+        let children = $(this).children().filter("input");
+        //console.log("Children: " + children.attr("type") + " " + children.attr("name"));
         if (children.attr("type") === "radio") {
-            errors = (errors ? true : !validateRadio(children.attr("name"), valuesToSubmit));
+            validateRadio(children.attr("name"), valuesToSubmit);
         }
         else if (children.attr("type") === "file") {
-            validateFile(children.attr("name"), valuesToSubmit);
+            validateFile(children.attr("id"), valuesToSubmit);
         }
     });
 }
 
 function validateRadio(name, valuesToSubmit) {
-    var radioButtons = document.getElementsByName(name);
-    var anyChecked = false;
-    for (var i = 0; i < radioButtons.length; i++) {
+    let radioButtons = document.getElementsByName(name);
+    let anyChecked = false;
+    for (let i = 0; i < radioButtons.length; i++) {
         if (radioButtons[i].checked === true) {
             anyChecked = true;
-            var modeLength = radioButtons[i].getAttribute("name").length;
-            var chosenId = "#" + radioButtons[i].getAttribute("id").substr(modeLength);
-            validateChildren(chosenId);
+            let modeLength = radioButtons[i].getAttribute("name").length;
+            let chosen = radioButtons[i].getAttribute("id").substr(modeLength)
+            let chosenId = "#" + chosen;
+            valuesToSubmit[name] = chosen;
+            validateChildren(chosenId, valuesToSubmit);
         }
     }
-    return anyChecked;
+    if (!anyChecked) {
+        valuesToSubmit.errors = true;
+    }
 }
 
-function validateFile(name, valuesToSubmit) {
-    var file = document.getElementsByName(name)[0];
+function validateFile(id, valuesToSubmit) {
+    let file = document.getElementById(id);
     if (file.value === "") {
         valuesToSubmit.errors = true;
     }
     else {
-        valuesToSubmit[name] = file.value;
+        valuesToSubmit[file.name] = file;
     }
 }
