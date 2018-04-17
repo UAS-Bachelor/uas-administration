@@ -31,12 +31,26 @@ function validateSubmit(rootId) {
     var valuesToSubmit = { errors: false};
     validateChildren(id, valuesToSubmit);
     console.log(valuesToSubmit);
+
     if(valuesToSubmit.errors) {
         document.getElementById("errorMessage").style.display = "block";
     }
     else {
 
     }
+    sendData();
+}
+
+function sendData() {
+    var formData = new FormData();
+    var input = document.getElementsByName("upload-file-SORA")[0];
+
+    formData.append("sora", input.files[0]);
+
+    //console.log(formData);
+    var request = new XMLHttpRequest();
+    request.open("POST", "/save-mission");
+    request.send(formData);
 }
 
 function validateChildren(parent, valuesToSubmit) {
@@ -45,16 +59,15 @@ function validateChildren(parent, valuesToSubmit) {
         var children = $(this).children().filter("input");
         console.log("Children: " + children.attr("type") + " " + children.attr("name"));
         if (children.attr("type") === "radio") {
-            errors = (errors ? true : !validateRadio(children.attr("name")));
+            errors = (errors ? true : !validateRadio(children.attr("name"), valuesToSubmit));
         }
         else if (children.attr("type") === "file") {
             validateFile(children.attr("name"), valuesToSubmit);
         }
     });
-    return errors;
 }
 
-function validateRadio(name) {
+function validateRadio(name, valuesToSubmit) {
     var radioButtons = document.getElementsByName(name);
     var anyChecked = false;
     for (var i = 0; i < radioButtons.length; i++) {

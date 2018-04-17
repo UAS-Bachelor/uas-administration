@@ -3,6 +3,7 @@ import requests
 import sys
 import argparse
 from os import system
+import os
 
 app = Flask(__name__)
 
@@ -39,11 +40,18 @@ def map_service():
     return render_template('layout.html', html=map_service)
 
 
-@app.route('/validate-mission', methods=['POST'])
-def validate_mission():
-    response_to_validate = request.get_data()
-    print(response_to_validate)
-    requests.post('http://127.0.0.1:5004/validate-mission', data=response_to_validate)
+@app.route('/save-mission', methods=['POST'])
+def save_mission():
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    response_to_validate = request.files['sora']
+    form_data = request.files.copy()
+    form_list = form_data.keys()
+    for e in form_list:
+        print(e)
+    save_location = current_directory + "/uploads/" + response_to_validate.filename
+
+    response_to_validate.save(save_location)
+    #requests.post('http://127.0.0.1:5004/validate-mission', data=response_to_validate)
     return ""
 
 if __name__ == '__main__':
