@@ -12,6 +12,7 @@ from template_parser import load_xml
 from yattag import Doc, indent
 
 app = Flask(__name__)
+
 doc, tag, text = Doc().tagtext()
 parser = AdvancedHTMLParser.AdvancedHTMLParser()
 
@@ -22,8 +23,11 @@ def new_mission():
 
 
 @app.route('/save-mission', methods=['POST'])
+@cross_origin()
 def save_mission():
     current_directory = os.path.dirname(os.path.realpath(__file__)) + "/uploads/"
+    if not os.path.exists(current_directory):
+        os.mkdir(current_directory)
 
     data_to_save = {}
     files = []

@@ -15,6 +15,7 @@ function resetInputs(parent) {
 }
 
 function validateSubmit(rootId) {
+    document.getElementById("errorMessage").style.display = "none";
     let id = "#" + rootId;
     let valuesToSubmit = {errors: false};
     validateChildren(id, valuesToSubmit);
@@ -25,6 +26,7 @@ function validateSubmit(rootId) {
     else {
         delete valuesToSubmit.errors;
         sendData(valuesToSubmit);
+        document.getElementById("successMessage").style.display = "block";
     }
 }
 
