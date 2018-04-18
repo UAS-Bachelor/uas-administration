@@ -7,4 +7,4 @@ class Map(Requirement):
         super(Map, self).__init__(name)
 
     def get_html(self):
-        return "Map requirement: <br />Name: " + self.name + "<br />"
+        return ""+ self.name + ":<br />"

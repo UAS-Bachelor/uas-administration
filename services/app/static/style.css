@@ -17,70 +17,121 @@ form {
     margin-left: 0;
 }
 
-.ul li{
+.ul .lines{
     color: #AAAAAA;
     display: inline-block;
     position: relative;
 }
 
-.ul li input[type=radio]{
+.ul .lines input[type=radio]{
     position: absolute;
     visibility: hidden;
 }
 
-.ul li label {
+.ul .lines label {
     float: right;
-    font-weight: 200;
-    font-size: 1.35em;
-    margin-left: 40px;
-    margin-right: 20px;
+    font-weight: 100;
+    font-size: 20;
+    margin-left: 30px;
+    margin-right: -10px;
     margin-bottom: 5px;
-    padding-bottom: 10px;
-    z-index: 9;
+    z-index: 20;
     cursor: pointer;
     -webkit-transition: all 0.25s linear;
 }
 
-.ul li:hover label{
-    color: darkblue;
+.ul .lines:hover label{
+    color: #5C5E5E;
 }
 
-.ul li .choicebutton {
+.ul .lines .choicebutton {
+    display: inline-block;
     position: absolute;
     margin-top: 5px;
     border: 5px solid #AAAAAA;
     border-radius: 100%;
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
 	z-index: 5;
 	transition: border .25s linear;
 	-webkit-transition: border .25s linear;
 }
 
-.ul li:hover .choicebutton{
-    border: 5px solid darkblue;
+.ul .lines:hover .choicebutton{
+    border: 5px solid #5C5E5E;
 }
 
-.ul li .choicebutton::before {
+.ul .lines .choicebutton::before {
     position: inherit;
 	content: '';
     border-radius: 100%;
-    height: 11px;
-    width: 11px;
-    top: 2px;
-	left: 2px;
+    height: 8px;
+    width: 8px;
+    top: 1px;
+	left: 1px;
 	transition: background 0.25s linear;
 	-webkit-transition: background 0.25s linear;
 }
 
 input[type=radio]:checked ~ .choicebutton {
-    border: 5px solid blue;
+    border: 5px solid #2D2E2E;
   }
 
 input[type=radio]:checked ~ .choicebutton::before {
-    background: blue;
+    background: #2D2E2E;
 }
 
 input[type=radio]:checked ~ label {
-    color: blue;
+    color: #2D2E2E;
+}
+
+.upload-file {
+    margin-right: 20px;
+    display: inline;
+    
+}
+
+.upload-div {
+    width: 25%;
+    margin-top: 10px;
+    padding-bottom: 30px;
+    border-bottom: solid #BBBFBF;
+    border-width: 0.5;
+}
+
+.wrapper-div {
+    width: 50%;
+    margin-top: 10px;
+    padding-bottom: 30px;
+    border-bottom: solid #BBBFBF;
+    border-width: 0.5;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    font-family: Tahoma;
+    font-size: 18;
+    color: #ffffff;
+    background: url('upload.png') no-repeat;
+    background-position-x: 6px;
+    background-position-y: 7px;
+    background-color: #343a40;
+    display: inline-block;
+    padding: 5px 15px 5px 35px;
+    cursor: pointer;
+    -webkit-transition: all 0.25s linear;
+    border-radius: 5px;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #5C5E5E;
 }

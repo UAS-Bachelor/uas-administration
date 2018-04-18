@@ -9,24 +9,22 @@ class Choice(Requirement):
         self.options = []
 
     def get_html(self):
-        return_string = "Choice requirement: <br />Name: " + self.name + "<br /><br />"
+        return_string = ""+ self.name + ":<br /><br />"
         return_string += self.__build_options(self.name)
         return return_string
 
     def __build_options(self, name):
         doc, tag, text = Doc().tagtext()
-        
-        for radio_option in self.options:
-            choiceID = self.name+radio_option.name
-            with tag('ul', klass='ul'):
-                with tag('li', klass='lines'):
-                    doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" class=\"choice\" onchange=\"changeVisibility('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
-                    doc.asis("<label for=\""+choiceID+"\">"+radio_option.name+"</label>")
-                    with tag('div', klass='choicebutton'):
-                        pass
-            #text(radio_option.name)
-        for option in self.options:
-            option.append_html(name, doc, tag, text)
+        with tag('div', id='wrapper-div'):
+            for radio_option in self.options:
+                choiceID = self.name+radio_option.name
+                with tag('ul', klass='ul'):
+                    with tag('li', klass='lines'):
+                        doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" class=\"choice\" onchange=\"changeVisibility('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
+                        doc.asis("<label for=\""+choiceID+"\">"+radio_option.name+"</label>")
+                        doc.asis("<div for=\""+choiceID+"\", class=\"choicebutton\"></div>")
+            for option in self.options:
+                option.append_html(name, doc, tag, text)
         return doc.getvalue()
 
     def add_option(self, option):
