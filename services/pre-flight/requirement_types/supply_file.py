@@ -12,7 +12,7 @@ class SupplyFile(Requirement):
             with tag('p', klass='upload-file'):
                 text(self.name)
             stripped_name = self.name.replace(" ", "-")
-            doc.stag('input', type='file', id='upload-file-'+stripped_name, name=stripped_name)
+            doc.stag('input', type='file', id='file', klass='inputfile', name=stripped_name)
             doc.asis("<label for=\"file\">Choose a file</label>")
         return doc.getvalue()
         

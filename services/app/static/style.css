@@ -116,6 +116,37 @@ input[type=radio]:checked ~ label {
 	z-index: -1;
 }
 
+#upload-all {
+    font-family: Tahoma;
+    font-size: 18;
+    color: #ffffff;
+    background: url('create.png') no-repeat;
+    background-position-x: 10px;
+    background-position-y: 10px;
+    background-color: #006111;
+    display: inline-block;
+    padding: 10px 20px 10px 45px;
+    cursor: pointer;
+    border: none;
+    -webkit-transition: all 0.25s linear;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.upload-all:hover, .upload-all:focus {
+    background-color: #003D0B;
+}
+
+#errorMessage {
+    font-size: 20;
+    display: none;
+}
+
+#successMessage {
+    font-size: 20;
+    display: none;
+}
+
 .inputfile + label {
     font-family: Tahoma;
     font-size: 18;

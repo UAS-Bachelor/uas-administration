@@ -21,12 +21,14 @@ function validateSubmit(rootId) {
     validateChildren(id, valuesToSubmit);
 
     if (valuesToSubmit.errors) {
-        document.getElementById("errorMessage").style.display = "block";
+        document.getElementById("errorMessage").style.display = "inline-block";
+        document.getElementById("upload-all").style.backgroundColor = "#9C000D";
     }
     else {
         delete valuesToSubmit.errors;
         sendData(valuesToSubmit);
-        document.getElementById("successMessage").style.display = "block";
+        document.getElementById("successMessage").style.display = "inline-block";
+        document.getElementById("upload-all").style.backgroundColor = "#006111";
     }
 }
 

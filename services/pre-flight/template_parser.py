@@ -31,7 +31,11 @@ def build_html(root):
     with tag('form', name='overall', id=root_id):
         for node in root.get_children():
             doc.asis(node.get_html() + "<br />")
-        doc.stag('input', type="button", value="Create mission", onclick='validateSubmit("' + root_id + '")')
+        doc.stag('input', type="button", id="upload-all", value="Create Mission", onclick='validateSubmit("' + root_id + '")')
+        with tag('div', id='errorMessage'):
+            text("You have to fill out all the forms!")
+        with tag('div', id='successMessage'):
+            text("The mission have been uploaded!")
 
     return doc.getvalue()
 

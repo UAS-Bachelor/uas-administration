@@ -25,7 +25,7 @@ class Choice(Requirement):
                 choiceID = stripped_name+stripped_radio_name
                 with tag('ul', klass='ul'):
                     with tag('li', klass='lines'):
-                doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+stripped_name+"\" onchange=\"changeVisibility('"+stripped_radio_name+"', '"+choiceID+"', '"+stripped_name+"')\"/>")
+                        doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+stripped_name+"\" onchange=\"changeVisibility('"+stripped_radio_name+"', '"+choiceID+"', '"+stripped_name+"')\"/>")
                         doc.asis("<label for=\""+choiceID+"\">"+radio_option.name+"</label>")
                         doc.asis("<div for=\""+choiceID+"\", class=\"choicebutton\"></div>")
             for option in self.options:
