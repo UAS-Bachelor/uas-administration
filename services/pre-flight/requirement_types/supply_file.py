@@ -11,7 +11,8 @@ class SupplyFile(Requirement):
         with tag('div', klass='upload-div'):
             with tag('p', klass='upload-file'):
                 text(self.name)
-            doc.stag('input', type='file', id='file', klass='inputfile', name='upload-file')
+            stripped_name = self.name.replace(" ", "-")
+            doc.stag('input', type='file', id='upload-file-'+stripped_name, name=stripped_name)
             doc.asis("<label for=\"file\">Choose a file</label>")
         return doc.getvalue()
         

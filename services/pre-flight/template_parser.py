@@ -27,9 +27,11 @@ def load_xml(path):
 
 def build_html(root):
     doc, tag, text = Doc().tagtext()
-    with tag('form', name='overall'):
+    root_id = "root-form"
+    with tag('form', name='overall', id=root_id):
         for node in root.get_children():
             doc.asis(node.get_html() + "<br />")
+        doc.stag('input', type="button", value="Create mission", onclick='validateSubmit("' + root_id + '")')
 
     return doc.getvalue()
 
@@ -59,8 +61,12 @@ def parse_childs(node, parent):
 def parse_map(node, parent):
     if isinstance(parent, Root):
         if not name_tag_error(node, "Map"):
-            new_map_requirement = Map(node.get('name'))
-            parent.add_child(new_map_requirement)
+            if node.get('safetyzoneSize') is None:
+                set_error("The map requirement must have a safety zone size!")
+            else:
+                new_map_requirement = Map(node.get('name'))
+                new_map_requirement.setSafetyzoneSize(node.get('safetyzoneSize'))
+                parent.add_child(new_map_requirement)
     else:
         set_error("The map requirement can only be a child of root not \"" + parent.name + "\".") #Might wanna add type to object
 
@@ -78,7 +84,10 @@ def parse_choice_option(node, parent_choice):
             if not name_tag_error(option, "Choice option"):
                 new_option = Option(option.get('name'))
                 parent_choice.add_option(new_option)
-                parse_childs(option, new_option)
+                if(len(option) == 0):
+                    set_error("A choice can not have zero children!")
+                else:
+                    parse_childs(option, new_option)
 
         else:
             set_error("A choice requirement, can only consist of \"choice\" tags. Not \"" + option.tag + "\"")

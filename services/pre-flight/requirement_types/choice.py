@@ -15,12 +15,17 @@ class Choice(Requirement):
 
     def __build_options(self, name):
         doc, tag, text = Doc().tagtext()
-        with tag('div', id='wrapper-div'):
+        outer_stripped_name = name.replace(" ", "-")
+        with tag('div', id=outer_stripped_name):
             for radio_option in self.options:
-                choiceID = self.name+radio_option.name
+
+                stripped_name = self.name.replace(" ", "-")
+                stripped_radio_name = radio_option.name.replace(" ", "-")
+
+                choiceID = stripped_name+stripped_radio_name
                 with tag('ul', klass='ul'):
                     with tag('li', klass='lines'):
-                        doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+self.name+"\" class=\"choice\" onchange=\"changeVisibility('"+radio_option.name+"', '"+choiceID+"', '"+self.name+"')\"/>")
+                doc.asis("<input type=\"radio\" id=\""+choiceID+"\" name=\""+stripped_name+"\" onchange=\"changeVisibility('"+stripped_radio_name+"', '"+choiceID+"', '"+stripped_name+"')\"/>")
                         doc.asis("<label for=\""+choiceID+"\">"+radio_option.name+"</label>")
                         doc.asis("<div for=\""+choiceID+"\", class=\"choicebutton\"></div>")
             for option in self.options:
@@ -40,6 +45,8 @@ class Option(RequirementWithChildren):
         #return_string = "Choice option: " + self.name + " at size: {0}".format(len(self.get_children()))
         #return_string += "<br />"
         for child in self.get_children():
-            with tag('div', id=self.name, klass=name, style='display:none'):
+            stripped_self_name = self.name.replace(" ", "-")
+            stripped__name = name.replace(" ", "-")
+            with tag('div', id=stripped_self_name, klass=stripped__name, style='display:none'):
                 doc.asis(child.get_html() + "<br />")
 
