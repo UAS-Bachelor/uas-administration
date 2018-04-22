@@ -4,6 +4,7 @@ from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
 from requirement_types.map import Map
+from requirement_types.text import Text
 from yattag import Doc 
 
 __regex = "(requirement)-(.+)"
@@ -55,6 +56,9 @@ def parse_childs(node, parent):
             elif requirement_type == "map":
                 parse_map(child, parent)
 
+            elif requirement_type == "text":
+                parse_text(child, parent)
+
             else:
                 set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
 
@@ -85,7 +89,7 @@ def parse_choice_option(node, parent_choice):
             if not name_tag_error(option, "Choice option"):
                 new_option = Option(option.get('name'))
                 parent_choice.add_option(new_option)
-                if(len(option) == 0):
+                if len(option) == 0:
                     set_error("A choice can not have zero children!")
                 else:
                     parse_childs(option, new_option)
@@ -98,6 +102,12 @@ def parse_supply_file(node, parent):
     if not name_tag_error(node, "Supply file"):
         new_supply_file_requirement = SupplyFile(node.get('name'))
         parent.add_child(new_supply_file_requirement)
+
+
+def parse_text(node, parent):
+    if not name_tag_error(node, "Text"):
+        new_text_requirement = Text(node.get('name'))
+        parent.add_child(new_text_requirement)
 
 
 def name_tag_error(node, requirement_type):

@@ -31,6 +31,8 @@ def save_mission():
     mission_to_save = __build_json(request, save_directory)
 
     result = database_manager.create_mission(mission_to_save)
+    if result:
+        print("Entry added to db")
     return jsonify(result=result)
 
 

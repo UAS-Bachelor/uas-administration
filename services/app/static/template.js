@@ -76,8 +76,22 @@ function validateChildren(parent, valuesToSubmit) {
             else if (children.attr("type") === "file") {
                 validateFile(children.attr("id"), valuesToSubmit);
             }
+
+            else if (children.attr("type") === "text") {
+                validateText(children.attr("id"), valuesToSubmit);
+            }
         }
     });
+}
+
+function validateText(id, valuesToSubmit) {
+    let file = document.getElementById(id);
+    if (file.value === "") {
+        valuesToSubmit.errors = true;
+    }
+    else {
+        valuesToSubmit[file.name] = file.value;
+    }
 }
 
 function validateMap(valuesToSubmit) {
