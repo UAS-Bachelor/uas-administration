@@ -14,11 +14,13 @@ def __connect_to_db():
 
 
 def create_mission(mission_details):
+    global config
+
     conn = __connect_to_db()
     if conn is None:
         return False
     try:
-        collection = conn[config['Database']['database']].missions
+        collection = conn['uas-administration'].missions
         collection.insert_one(mission_details)
         return True
     except errors.OperationFailure:

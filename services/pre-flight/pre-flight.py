@@ -27,7 +27,6 @@ def new_mission():
 @app.route('/save-mission', methods=['POST'])
 @cross_origin()
 def save_mission():
-
     save_directory = __get_save_directory()
     mission_to_save = __build_json(request, save_directory)
 
@@ -39,18 +38,24 @@ def __build_json(request_data, save_directory):
     data_to_save = {}
     files = []
 
+    current_time = datetime.now().strftime('%Y-%m-%d %H.%M.%S')
+    data_to_save['time'] = current_time
+
     form_data = request_data.form.copy()
     form_list = form_data.keys()
     for key in form_list:
-        data_to_save[key] = form_data[key]
+        try:
+            parsed_value = json.loads(form_data[key])
+            data_to_save[key] = parsed_value
+        except ValueError:
+            data_to_save[key] = form_data[key]
+
     form_data_files = request_data.files.copy()
     form_list_files = form_data_files.keys()
-    current_time = datetime.now().strftime('%Y-%m-%d %H.%M.%S')
     new_dir = save_directory + current_time
     if not os.path.exists(new_dir):
         os.mkdir(new_dir)
     for e in form_list_files:
-        print(e)
         response_to_validate = request_data.files[e]
         save_location = new_dir + "/" + response_to_validate.filename
         response_to_validate.save(save_location)
@@ -60,7 +65,6 @@ def __build_json(request_data, save_directory):
         })
 
     data_to_save['files'] = files
-    json_data = json.dumps(data_to_save)
     return data_to_save
 
 

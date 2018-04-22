@@ -10,6 +10,7 @@ __regex = "(requirement)-(.+)"
 __error = False
 __error_msg = "Something went wrong."
 
+
 def load_xml(path):
     global __error
     __error = False

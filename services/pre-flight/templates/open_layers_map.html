@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html>
 <head>
-    <title>Draw and Modify Features</title>
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
@@ -72,6 +69,7 @@
     });
 
     const bufferSize = {{ bufferSize }};
+    const flightId = "flightId";
     const bufferId = "bufferCircleId";
     let draw, buffer; // global so we can remove them later
     let modify = new ol.interaction.Modify({
@@ -88,6 +86,7 @@
 
         draw.on('drawend', function (e) {
             let circle = e.feature.getGeometry();
+            e.feature.setId(flightId);
             drawBuffer(circle.getCenter(), circle.getRadius(), circle.getLayout());
             map.removeInteraction(draw);
 
@@ -119,4 +118,3 @@
     addInteractions();
 </script>
 </body>
-</html>

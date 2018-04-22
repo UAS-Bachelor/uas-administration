@@ -20,7 +20,7 @@ function validateSubmit(rootId) {
     document.getElementById("successMessage").style.display = "none";
 
     let id = "#" + rootId;
-    let valuesToSubmit = {errors: true};
+    let valuesToSubmit = {errors: false};
     validateChildren(id, valuesToSubmit);
 
     if (valuesToSubmit.errors) {
@@ -45,7 +45,6 @@ function sendData(valuesToSend) {
         }
     }
 
-
     let request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
@@ -60,10 +59,6 @@ function sendData(valuesToSend) {
     };
     request.open("POST", "http://127.0.0.1:5004/save-mission");
     request.send(formData);
-}
-
-function validateMap(valuesToSubmit) {
-
 }
 
 function validateChildren(parent, valuesToSubmit) {
@@ -83,6 +78,21 @@ function validateChildren(parent, valuesToSubmit) {
             }
         }
     });
+}
+
+function validateMap(valuesToSubmit) {
+    let feature = source.getFeatureById(flightId);
+    if((feature == null)) {
+        valuesToSubmit.errors = true;
+    }
+    else {
+        let zone = feature.getGeometry();
+        let mapDetails = {};
+        mapDetails.center = zone.getCenter();
+        mapDetails.radius = zone.getRadius();
+        mapDetails.bufferSize = bufferSize;
+        valuesToSubmit.map = JSON.stringify(mapDetails);
+    }
 }
 
 function validateRadio(name, valuesToSubmit) {
