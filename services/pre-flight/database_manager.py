@@ -1,4 +1,9 @@
+import configparser
+import os
+
 from pymongo import MongoClient, errors
+config = configparser.ConfigParser()
+config.read('../../config.ini')
 
 
 def __connect_to_db():
@@ -13,7 +18,7 @@ def create_mission(mission_details):
     if conn is None:
         return False
     try:
-        collection = conn['uas-administration'].missions
+        collection = conn[config['Database']['database']].missions
         collection.insert_one(mission_details)
         return True
     except errors.OperationFailure:
