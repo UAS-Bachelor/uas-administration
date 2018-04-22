@@ -1,0 +1,21 @@
+from pymongo import MongoClient, errors
+
+
+def __connect_to_db():
+    try:
+        return MongoClient()
+    except errors.ConnectionFailure:
+        print("Could not connect to db")
+
+
+def create_mission(mission_details):
+    conn = __connect_to_db()
+    if conn is None:
+        return False
+    try:
+        collection = conn['uas-administration'].missions
+        collection.insert_one(mission_details)
+        return True
+    except errors.OperationFailure:
+        print("Could not insert into db")
+        return False
