@@ -7,9 +7,9 @@ class Map(Requirement):
     def __init__(self, name):
         super(Map, self).__init__(name)
 
-    def setSafetyzoneSize(self, size):
-        self.safetyzoneSize = size
+    def set_safety_zone_size(self, size):
+        self.safety_zone_size = size
 
     def get_html(self):
-        return render_template('open_layers_map.html', bufferSize=self.safetyzoneSize)
+        return render_template('open_layers_map.html', bufferSize=self.safety_zone_size)
         #return "Map requirement: <br />Name: " + self.name + "<br />"

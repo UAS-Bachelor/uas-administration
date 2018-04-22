@@ -65,7 +65,7 @@ def parse_map(node, parent):
                 set_error("The map requirement must have a safety zone size!")
             else:
                 new_map_requirement = Map(node.get('name'))
-                new_map_requirement.setSafetyzoneSize(node.get('safetyzoneSize'))
+                new_map_requirement.set_safety_zone_size(node.get('safetyzoneSize'))
                 parent.add_child(new_map_requirement)
     else:
         set_error("The map requirement can only be a child of root not \"" + parent.name + "\".") #Might wanna add type to object

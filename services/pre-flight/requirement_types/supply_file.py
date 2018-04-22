@@ -1,6 +1,7 @@
 from .requirement_type import Requirement
 from yattag import Doc
 
+
 class SupplyFile(Requirement):
 
     def __init__(self, name):
@@ -11,7 +12,5 @@ class SupplyFile(Requirement):
         with tag('div'):
             text(self.name)
             stripped_name = self.name.replace(" ", "-")
-            doc.stag('input', type='file', id='upload-file-'+stripped_name, name=stripped_name)
+            doc.stag('input', type='file', klass='requirement', id='upload-file-'+stripped_name, name=stripped_name)
         return doc.getvalue()
-        
-        #"Supply file requirement: <br />Name: " + self.name + "<br />"

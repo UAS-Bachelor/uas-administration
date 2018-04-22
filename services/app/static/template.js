@@ -16,8 +16,11 @@ function resetInputs(parent) {
 
 function validateSubmit(rootId) {
     document.getElementById("errorMessage").style.display = "none";
+    document.getElementById("serverErrorMessage").style.display = "none";
+    document.getElementById("successMessage").style.display = "none";
+
     let id = "#" + rootId;
-    let valuesToSubmit = {errors: false};
+    let valuesToSubmit = {errors: true};
     validateChildren(id, valuesToSubmit);
 
     if (valuesToSubmit.errors) {
@@ -50,21 +53,34 @@ function sendData(valuesToSend) {
             if (result.result) {
                 document.getElementById("successMessage").style.display = "block";
             }
+            else {
+                document.getElementById("serverErrorMessage").style.display = "block";
+            }
         }
-    }
+    };
     request.open("POST", "http://127.0.0.1:5004/save-mission");
     request.send(formData);
 }
 
+function validateMap(valuesToSubmit) {
+
+}
+
 function validateChildren(parent, valuesToSubmit) {
     $(parent).children().filter("div").each(function () {
-        let children = $(this).children().filter("input");
-        //console.log("Children: " + children.attr("type") + " " + children.attr("name"));
-        if (children.attr("type") === "radio") {
-            validateRadio(children.attr("name"), valuesToSubmit);
+        let id = $(this).attr("id");
+        if (id === "map") {
+            validateMap(valuesToSubmit);
         }
-        else if (children.attr("type") === "file") {
-            validateFile(children.attr("id"), valuesToSubmit);
+        else {
+            let children = $(this).children().filter("input");
+            //console.log("Children: " + children.attr("type") + " " + children.attr("name") + " " + children.prop("tagName"));
+            if (children.attr("type") === "radio") {
+                validateRadio(children.attr("name"), valuesToSubmit);
+            }
+            else if (children.attr("type") === "file") {
+                validateFile(children.attr("id"), valuesToSubmit);
+            }
         }
     });
 }
