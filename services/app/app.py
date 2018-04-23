@@ -49,7 +49,7 @@ def view_mission(id):
     try:
         view_mission_service = requests.get(config['Routing']['base_url'] + ':5004/view-mission/' + id).text
     except requests.exceptions.ConnectionError:
-        return 'View missions service unavailable'
+        return 'View mission service unavailable'
     return render_template('layout.html', html=view_mission_service)
 
 
