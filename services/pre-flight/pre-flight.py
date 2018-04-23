@@ -32,16 +32,19 @@ def view_missions():
 
 @app.route('/view-mission/<id>')
 def view_mission(id):
-    mission = database_manager.get_mission(id)
+    no_errors, mission = database_manager.get_mission(id)
 
-    if "map" in mission:
-        map = __build_map(mission['map'])
-        del mission['map']
+    if no_errors:
+        if "map" in mission:
+            map = __build_map(mission['map'])
+            del mission['map']
 
-    if "files" in mission:
-        files = __build_files(mission['files'])
-        del mission['files']
-    return render_template('mission.html', mission=mission, map=map, files=files)
+        if "files" in mission:
+            files = __build_files(mission['files'])
+            del mission['files']
+        return render_template('mission.html', mission=mission, map=map, files=files)
+    else:
+        return render_template('mission.html', error_msg=mission)
 
 
 @app.route('/save-mission', methods=['POST'])

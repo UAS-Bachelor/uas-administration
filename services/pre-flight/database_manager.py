@@ -1,5 +1,6 @@
 import configparser
 
+import bson
 from bson import ObjectId
 from pymongo import MongoClient, errors
 
@@ -47,5 +48,8 @@ def get_mission(id):
         return False
 
     collection = conn['uas-administration'].missions
-    return collection.find_one({"_id": ObjectId(id)})
-
+    try:
+        objectId = ObjectId(id)
+        return True, collection.find_one({"_id": objectId})
+    except bson.errors.InvalidId:
+        return False, "The flight id: " + id + " does not exist"
