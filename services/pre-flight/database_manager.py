@@ -5,7 +5,8 @@ from bson import ObjectId
 from pymongo import MongoClient, errors
 
 config = configparser.ConfigParser()
-config.read('../../config.ini')
+config.read('config.ini')
+database = config['Database']['database']
 
 
 def __connect_to_db():
@@ -22,7 +23,7 @@ def create_mission(mission_details):
     if conn is None:
         return False
     try:
-        collection = conn['uas-administration'].missions
+        collection = conn[database].missions
         collection.insert_one(mission_details)
         return True
     except errors.OperationFailure as e:
@@ -38,16 +39,16 @@ def get_missions():
     if conn is None:
         return False
 
-    collection = conn['uas-administration'].missions
+    collection = conn[database].missions
     return collection.find()
 
 
 def get_mission(id):
     conn = __connect_to_db()
     if conn is None:
-        return False
+        return False, "Could not connect to the database"
 
-    collection = conn['uas-administration'].missions
+    collection = conn[database].missions
     try:
         objectId = ObjectId(id)
         return True, collection.find_one({"_id": objectId})

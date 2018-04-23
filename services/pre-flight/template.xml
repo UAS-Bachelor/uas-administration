@@ -1,5 +1,5 @@
 <requirements>
-    <requirement-map name="Flight zone" safetyzoneSize="50"/>
+
     <requirement-text name="Pilot name"/>
     <requirement-choice name="Flight mode">
         <choice name="Open">

@@ -35,6 +35,8 @@ def view_mission(id):
     no_errors, mission = database_manager.get_mission(id)
 
     if no_errors:
+        map = ""
+        files = ""
         if "map" in mission:
             map = __build_map(mission['map'])
             del mission['map']
