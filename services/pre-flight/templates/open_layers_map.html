@@ -28,10 +28,10 @@
                     color: '#4eccff'
                 })
             }),
-            geometry: function (feature) {
+            /*geometry: function (feature) {
                 let center = feature.getGeometry().getCenter();
                 return new ol.geom.Point(center);
-            }
+            }*/
         })
     ];
 
@@ -81,6 +81,36 @@
     function addInteractions() {
         draw = new ol.interaction.Draw({
             source: source,
+            type: "Polygon"
+        });
+
+        draw.on('drawend', function (e) {
+            let circle = e.feature.getGeometry();
+            e.feature.setId(flightId);
+            //drawBuffer(circle.getCenter(), circle.getRadius(), circle.getLayout());
+            map.removeInteraction(draw);
+            circle.scale(2);
+            let point = circle.getLinearRing(0).getCoordinates()[0];
+            console.log(point);
+            let center = getCenterOfExtent(circle.getExtent());
+            console.log(center);
+            let dist = Math.sqrt(Math.pow((center[0]-point[0]), 2) + Math.pow((center[1]-point[1]), 2));
+            console.log(dist/bufferSize);
+
+        });
+
+        map.addInteraction(draw);
+    }
+
+    function getCenterOfExtent(Extent) {
+        let X = Extent[0] + (Extent[2] - Extent[0]) / 2;
+        let Y = Extent[1] + (Extent[3] - Extent[1]) / 2;
+        return [X, Y];
+    }
+
+    /*function addInteractions() {
+        draw = new ol.interaction.Draw({
+            source: source,
             type: "Circle"
         });
 
@@ -96,7 +126,7 @@
         });
 
         map.addInteraction(draw);
-    }
+    }*/
 
     function drawBuffer(center, radius) {
         radius = radius + bufferSize;

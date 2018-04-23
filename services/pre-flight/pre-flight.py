@@ -5,7 +5,6 @@ import sys
 from datetime import datetime
 from os import system
 
-import AdvancedHTMLParser
 from flask import Flask, render_template, request, jsonify
 from flask_cors import cross_origin
 from yattag import Doc
@@ -16,7 +15,6 @@ from template_parser import load_xml
 app = Flask(__name__)
 
 doc, tag, text = Doc().tagtext()
-parser = AdvancedHTMLParser.AdvancedHTMLParser()
 
 
 @app.route('/new-mission')

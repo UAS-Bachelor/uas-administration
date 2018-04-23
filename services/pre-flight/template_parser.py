@@ -7,7 +7,7 @@ from requirement_types.map import Map
 from requirement_types.text import Text
 from yattag import Doc 
 
-__regex = "(requirement)-(.+)"
+__regex = "(requirement)-(.+)|(\\btemplates\\b)"
 __error = False
 __error_msg = "Something went wrong."
 
@@ -21,7 +21,6 @@ def load_xml(path):
     tree = ET.parse(path)
     root = tree.getroot()
     parse_childs(root, node_root)
-
     if __error:
         return __error_msg
     return build_html(node_root)
@@ -43,10 +42,15 @@ def parse_childs(node, parent):
         requirement = re.match(__regex, child.tag, re.IGNORECASE)
 
         if requirement is None:
+            print(child.tag)
             set_error("The requirement tag: \"" + child.tag + "\" is not recognized.")
+
+        elif requirement.group(0) == "templates":
+            pass
+
         else:
             requirement_type = requirement.group(2)
-
+            print(requirement_type)
             if requirement_type == "supply-file":
                 parse_supply_file(child, parent)
 
