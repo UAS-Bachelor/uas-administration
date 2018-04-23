@@ -1,0 +1,8 @@
+bson
+pymongo
+configobj
+yattag
+Flask>=0.12.2
+Flask-Cors>=3.0.3
+psutil>=5.4.3
+requests>=2.18.4
