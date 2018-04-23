@@ -1,5 +1,6 @@
 import configparser
 
+from bson import ObjectId
 from pymongo import MongoClient, errors
 
 config = configparser.ConfigParser()
@@ -9,8 +10,8 @@ config.read('../../config.ini')
 def __connect_to_db():
     try:
         return MongoClient()
-    except errors.ConnectionFailure:
-        print("Could not connect to db")
+    except errors.ConnectionFailure as e:
+        print("Could not connect to db: %s" % str(e))
 
 
 def create_mission(mission_details):
@@ -23,6 +24,28 @@ def create_mission(mission_details):
         collection = conn['uas-administration'].missions
         collection.insert_one(mission_details)
         return True
-    except errors.OperationFailure:
-        print("Could not insert into db")
+    except errors.OperationFailure as e:
+        print("Could not insert into db: %s" % str(e))
         return False
+    except errors.ServerSelectionTimeoutError as e:
+        print("Could not connect to db: %s" % str(e))
+        return False
+
+
+def get_missions():
+    conn = __connect_to_db()
+    if conn is None:
+        return False
+
+    collection = conn['uas-administration'].missions
+    return collection.find()
+
+
+def get_mission(id):
+    conn = __connect_to_db()
+    if conn is None:
+        return False
+
+    collection = conn['uas-administration'].missions
+    return collection.find_one({"_id": ObjectId(id)})
+

@@ -22,7 +22,7 @@ def login():
     try:
         login = requests.get(config['Routing']['base_url'] + ':5002/login').text
     except requests.exceptions.ConnectionError:
-        return 'Login service unavailable'
+        login = 'Login service unavailable'
     return render_template('layout.html', html=login)
 
 
@@ -35,13 +35,22 @@ def new_mission():
     return render_template('layout.html', html=new_mission_request)
 
 
-@app.route('/map')
-def map_service():
+@app.route('/view-missions')
+def view_missions():
     try:
-        map_service = requests.get(config['Routing']['base_url'] + ':5004/map-service').text
+        view_missions_service = requests.get(config['Routing']['base_url'] + ':5004/view-missions').text
     except requests.exceptions.ConnectionError:
-        return 'Map service unavailable'
-    return render_template('layout.html', html=map_service)
+        return 'View missions service unavailable'
+    return render_template('layout.html', html=view_missions_service)
+
+
+@app.route('/view-mission/<id>')
+def view_mission(id):
+    try:
+        view_mission_service = requests.get(config['Routing']['base_url'] + ':5004/view-mission/' + id).text
+    except requests.exceptions.ConnectionError:
+        return 'View missions service unavailable'
+    return render_template('layout.html', html=view_mission_service)
 
 
 if __name__ == '__main__':

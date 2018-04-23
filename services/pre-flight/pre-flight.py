@@ -21,7 +21,27 @@ parser = AdvancedHTMLParser.AdvancedHTMLParser()
 
 @app.route('/new-mission')
 def new_mission():
-    return render_template('new-mission.html', message=load_parser())
+    return render_template('new-mission.html', message=__load_parser())
+
+
+@app.route('/view-missions')
+def view_missions():
+    missions_list = database_manager.get_missions()
+    return render_template('missions-list.html', missions_list=missions_list)
+
+
+@app.route('/view-mission/<id>')
+def view_mission(id):
+    mission = database_manager.get_mission(id)
+
+    if "map" in mission:
+        map = __build_map(mission['map'])
+        del mission['map']
+
+    if "files" in mission:
+        files = __build_files(mission['files'])
+        del mission['files']
+    return render_template('mission.html', mission=mission, map=map, files=files)
 
 
 @app.route('/save-mission', methods=['POST'])
@@ -34,6 +54,21 @@ def save_mission():
     if result:
         print("Entry added to db")
     return jsonify(result=result)
+
+
+def __build_map(map):
+    center = map['center']
+    radius = map['radius']
+    buffer_size = map['bufferSize']
+    return render_template('show_mission_map.html', center=center, radius=radius, bufferSize=buffer_size)
+
+
+def __build_files(files):
+    files_html = "Uploaded files: <br />"
+    for file in files:
+        print(file['name'])
+        files_html += "- " + file['name'] + "<br />"
+    return files_html
 
 
 def __build_json(request_data, save_directory):
@@ -78,7 +113,7 @@ def __get_save_directory():
     return save_directory
 
 
-def load_parser():
+def __load_parser():
     xml_reference = 'services/pre-flight/template.xml'
     return load_xml(xml_reference)
 
