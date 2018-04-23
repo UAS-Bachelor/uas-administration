@@ -66,10 +66,9 @@
     }
 
     function drawFlightZone(center, radius) {
-        radius = radius;
-        buffer = new ol.geom.Circle(center, radius);
+        flight = new ol.geom.Circle(center, radius);
         let feature = new ol.Feature({
-            geometry: buffer
+            geometry: flight
         });
         feature.setId(flightId);
         source.addFeature(feature);
@@ -83,6 +82,9 @@
         });
         feature.setId(bufferId);
         sourceBuffer.addFeature(feature);
+
+        let extent = buffer.getExtent();
+        map.getView().fit(extent);
     }
 
     drawZones({{ center }}, {{ radius }}, {{ bufferSize }});

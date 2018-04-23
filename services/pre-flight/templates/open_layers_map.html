@@ -71,7 +71,7 @@
     const bufferSize = {{ bufferSize }};
     const flightId = "flightId";
     const bufferId = "bufferCircleId";
-    let draw, buffer; // global so we can remove them later
+    let draw, flightZone; // global so we can remove them later
     let modify = new ol.interaction.Modify({
         source: source
     });
@@ -100,9 +100,9 @@
 
     function drawBuffer(center, radius) {
         radius = radius + bufferSize;
-        buffer = new ol.geom.Circle(center, radius);
+        flightZone = new ol.geom.Circle(center, radius);
         let feature = new ol.Feature({
-            geometry: buffer
+            geometry: flightZone
         });
         feature.setId(bufferId);
         bufferSource.addFeature(feature);
