@@ -74,7 +74,6 @@ function sendData(valuesToSend) {
 }
 
 function validateChildren(parent, valuesToSubmit) {
-    console.log(parent)
     $(parent).children().filter("div").each(function () {
         let id = $(this).attr("id");
         if (id === "map") {

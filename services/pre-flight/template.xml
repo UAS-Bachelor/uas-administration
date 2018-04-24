@@ -29,13 +29,9 @@
     </requirement-choice>
 
     <requirement-choice name="Drone type">
-        <choice name="Type 1">
-            <requirement-supply-file name="Test"/>
-        </choice>
+        <choice name="Type 1"/>
 
-        <choice name="Type 2">
-            <requirement-supply-file name="Test2"/>
-        </choice>
+        <choice name="Type 2"/>
     </requirement-choice>
 
 </requirements>
