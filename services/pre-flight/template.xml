@@ -10,8 +10,13 @@
                 <requirement-supply-file name="SORA"/>
             </requirement-checkbox>
 
-            <requirement-supply-file name="Police approval"/>
-            <requirement-supply-file name="Land owner permit"/>
+            <requirement-checkbox name="Police approval needed">
+                <requirement-supply-file name="Police approval"/>
+            </requirement-checkbox>
+
+            <requirement-checkbox name="Land owner permit needed">
+                <requirement-supply-file name="Land owner permit"/>
+            </requirement-checkbox>
         </choice>
 
         <choice name="Certified">

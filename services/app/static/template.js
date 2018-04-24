@@ -1,4 +1,4 @@
-function changeVisibility(divId, choiceId, name) {
+function changeVisibilityRadio(divId, choiceId, name) {
     let div = document.getElementById(divId)
     let chosen = document.getElementById(choiceId)
     let choices = document.getElementsByClassName(name)
@@ -7,7 +7,19 @@ function changeVisibility(divId, choiceId, name) {
         choices[i].style.display = 'none'
     }
     if (chosen.checked) {
-        div.style.display = 'block'
+        div.style.display = 'block';
+    }
+}
+
+function changeVisibilityCheckbox(divId, checkboxId) {
+    let div = document.getElementById(divId);
+    let checkbox = document.getElementById(checkboxId);
+
+    if (checkbox.checked) {
+        div.style.display = 'block';
+    }
+    else {
+        div.style.display = 'none';
     }
 }
 
@@ -62,6 +74,7 @@ function sendData(valuesToSend) {
 }
 
 function validateChildren(parent, valuesToSubmit) {
+    console.log(parent)
     $(parent).children().filter("div").each(function () {
         let id = $(this).attr("id");
         if (id === "map") {
@@ -80,23 +93,35 @@ function validateChildren(parent, valuesToSubmit) {
             else if (children.attr("type") === "text") {
                 validateText(children.attr("id"), valuesToSubmit);
             }
+
+            else if (children.attr("type") === "checkbox") {
+                validateCheckbox(children.attr("id"), valuesToSubmit);
+            }
         }
     });
 }
 
+function validateCheckbox(id, valuesToSubmit) {
+    let checkbox = document.getElementById(id);
+    if (checkbox.checked) {
+        let divWithChildren = "#" + id + "-children-div";
+        validateChildren(divWithChildren, valuesToSubmit);
+    }
+}
+
 function validateText(id, valuesToSubmit) {
-    let file = document.getElementById(id);
-    if (file.value === "") {
+    let textField = document.getElementById(id);
+    if (textField.value === "") {
         valuesToSubmit.errors = true;
     }
     else {
-        valuesToSubmit[file.name] = file.value;
+        valuesToSubmit[textField.name] = textField.value;
     }
 }
 
 function validateMap(valuesToSubmit) {
     let feature = source.getFeatureById(flightId);
-    if((feature == null)) {
+    if ((feature == null)) {
         valuesToSubmit.errors = true;
     }
     else {
