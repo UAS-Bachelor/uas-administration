@@ -80,6 +80,11 @@ function validateChildren(parent, valuesToSubmit) {
             else if (children.attr("type") === "text") {
                 validateText(children.attr("id"), valuesToSubmit);
             }
+
+            let mutliLineText = $(this).children().filter("textarea");
+            if (mutliLineText.attr("name") === "multiline") {
+                validateMultilineText(mutliLineText.attr("id"), valuesToSubmit)
+            }
         }
     });
 }
@@ -135,4 +140,9 @@ function validateFile(id, valuesToSubmit) {
     else {
         valuesToSubmit[file.name] = file;
     }
+}
+
+function validateMultilineText(id, valuesToSubmit) {
+    let text = document.getElementById(id).value;
+    valuesToSubmit["Comment"] = text;
 }

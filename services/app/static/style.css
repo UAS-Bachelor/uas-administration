@@ -22,3 +22,11 @@ tr:not(:first-child):hover {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+
+.comment {
+    resize: none;
+}
+
+p {
+    white-space: pre-wrap;
+}

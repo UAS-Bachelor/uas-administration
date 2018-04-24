@@ -7,6 +7,7 @@ from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
 from requirement_types.map import Map
 from requirement_types.text import Text
+from requirement_types.multiline_text import Multiline_text
 from yattag import Doc 
 
 __regex = "(requirement)-(.+)"
@@ -63,6 +64,9 @@ def parse_childs(node, parent):
 
             elif requirement_type == "checkbox":
                 parse_checkbox(child, parent)
+
+            elif requirement_type == "multiline-text":
+                parse_multiline_text(child, parent)
             else:
                 set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
 
@@ -121,6 +125,11 @@ def parse_checkbox(node, parent):
         new_checkbox_requirement = Checkbox(node.get('name'))
         parent.add_child(new_checkbox_requirement)
         parse_childs(node, new_checkbox_requirement)
+
+def parse_multiline_text(node, parent):
+    if not name_tag_error(node, "Multiline Text"):
+        new_multiline_text_requirement = Multiline_text(node.get('name'))
+        parent.add_child(new_multiline_text_requirement)
 
 
 def name_tag_error(node, requirement_type):

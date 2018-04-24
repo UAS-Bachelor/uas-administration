@@ -32,5 +32,6 @@
             <requirement-supply-file name="Test2"/>
         </choice>
     </requirement-choice>
+    <requirement-multiline-text name="Comment"/>
 
 </requirements>
