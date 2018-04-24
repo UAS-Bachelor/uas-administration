@@ -5,7 +5,7 @@
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 </head>
 <body>
-<div id="map" class="map" style="height: 400px; width: 800px"></div>
+<div id="map" class="map" style="height: 800px; width: 800px"></div>
 <script>
     let raster = new ol.layer.Tile({
         source: new ol.source.OSM()
@@ -59,8 +59,15 @@
         style: uneditableStyle
     });
 
+    let noFlight = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            url: 'static/export.kml',//'https://openlayers.org/en/v4.6.5/examples/data/kml/2012-02-10.kml',
+            format: new ol.format.KML()
+        })
+    });
+
     let map = new ol.Map({
-        layers: [raster, vector, bufferVector],
+        layers: [raster, vector, bufferVector, noFlight],
         target: 'map',
         view: new ol.View({
             center: ol.proj.fromLonLat([10.4283, 55.3688]),
