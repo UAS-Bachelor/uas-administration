@@ -42,6 +42,7 @@ def view_mission(id):
             del mission['map']
 
         if "files" in mission:
+            #if len(mission['files']) > 0:
             files = __build_files(mission['files'])
             del mission['files']
         return render_template('mission.html', mission=mission, map=map, files=files)
@@ -106,7 +107,8 @@ def __build_json(request_data, save_directory):
             'location': save_location
         })
 
-    data_to_save['files'] = files
+    if len(files) > 0:
+        data_to_save['files'] = files
     return data_to_save
 
 

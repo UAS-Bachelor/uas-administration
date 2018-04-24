@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 import re
+
+from requirement_types.checkbox import Checkbox
 from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
@@ -59,6 +61,8 @@ def parse_childs(node, parent):
             elif requirement_type == "text":
                 parse_text(child, parent)
 
+            elif requirement_type == "checkbox":
+                parse_checkbox(child, parent)
             else:
                 set_error("The requirement tag: \"" + requirement_type + "\" is not recognized.")
 
@@ -89,10 +93,10 @@ def parse_choice_option(node, parent_choice):
             if not name_tag_error(option, "Choice option"):
                 new_option = Option(option.get('name'))
                 parent_choice.add_option(new_option)
-                if len(option) == 0:
+                '''if len(option) == 0:
                     set_error("A choice can not have zero children!")
-                else:
-                    parse_childs(option, new_option)
+                else:'''
+                parse_childs(option, new_option)
 
         else:
             set_error("A choice requirement, can only consist of \"choice\" tags. Not \"" + option.tag + "\"")
@@ -107,7 +111,16 @@ def parse_supply_file(node, parent):
 def parse_text(node, parent):
     if not name_tag_error(node, "Text"):
         new_text_requirement = Text(node.get('name'))
+        if "default" in node.attrib:
+            new_text_requirement.set_default_value(node.get('default'))
         parent.add_child(new_text_requirement)
+
+
+def parse_checkbox(node, parent):
+    if not name_tag_error(node, "Checkbox"):
+        new_checkbox_requirement = Checkbox(node.get('name'))
+        parent.add_child(new_checkbox_requirement)
+        parse_childs(node, new_checkbox_requirement)
 
 
 def name_tag_error(node, requirement_type):
