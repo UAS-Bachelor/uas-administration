@@ -10,7 +10,7 @@ class Choice(Requirement):
         self.options = []
 
     def get_html(self):
-        return_string = self.name + "<br />"  # "Choice requirement: <br />Name: " + self.name + "<br /><br />"
+        return_string = self.name
         return_string += self.__build_options(self.name)
         return return_string
 
@@ -25,8 +25,9 @@ class Choice(Requirement):
                 choiceID = stripped_name + stripped_radio_name
 
                 doc.asis(
-                    "<input type=\"radio\" id=\"" + choiceID + "\" name=\"" + stripped_name + "\" onchange=\"changeVisibility('" + stripped_radio_name + "', '" + choiceID + "', '" + stripped_name + "')\"/>")
-                text(radio_option.name)
+                    "<input type=\"radio\" id=\"" + choiceID + "\" name=\"" + stripped_name + "\" onchange=\"changeVisibilityRadio('" + stripped_radio_name + "', '" + choiceID + "', '" + stripped_name + "')\"/>")
+                #text(radio_option.name)
+                doc.asis("<label for=\"" + choiceID + "\">" + radio_option.name + "</label>")
             for option in self.options:
                 option.append_html(name, doc, tag, text)
         return doc.getvalue()
