@@ -5,7 +5,7 @@
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 </head>
 <body>
-<div id="map" class="map" style="height: 800px; width: 800px"></div>
+<div id="map" class="map" style="height: 400px; width: 800px"></div>
 <script>
     let raster = new ol.layer.Tile({
         source: new ol.source.OSM()
@@ -92,17 +92,32 @@
         });
 
         draw.on('drawend', function (e) {
-            let circle = e.feature.getGeometry();
-            e.feature.setId(flightId);
+            let feature = e.feature;
+            let circle = feature.getGeometry();
+            feature.setId(flightId);
             drawBuffer(circle.getCenter(), circle.getRadius(), circle.getLayout());
             map.removeInteraction(draw);
+
+            checkOverlapWithNoFlight(circle.getExtent());
 
             circle.on('change', function (e) {
                 updateBuffer(e.target);
             });
+
+            modify.on('modifyend', function (e) {
+                let extent = e.features.item(0).getGeometry().getExtent();
+                resetMapRequirement();
+                checkOverlapWithNoFlight(extent);
+            })
         });
 
         map.addInteraction(draw);
+    }
+
+    function checkOverlapWithNoFlight(extent) {
+        noFlight.getSource().forEachFeatureInExtent(extent, function (e) {
+            overlapWithNoFlight(e.get('name'));
+        })
     }
 
     function drawBuffer(center, radius) {

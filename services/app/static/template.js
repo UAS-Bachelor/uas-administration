@@ -69,8 +69,8 @@ function sendData(valuesToSend) {
             }
         }
     };
-    request.open("POST", "http://127.0.0.1:5004/save-mission");
-    request.send(formData);
+    //request.open("POST", "http://127.0.0.1:5004/save-mission");
+    //request.send(formData);
 }
 
 function validateChildren(parent, valuesToSubmit) {
@@ -98,6 +98,7 @@ function validateChildren(parent, valuesToSubmit) {
             }
 
             let mutliLineText = $(this).children().filter("textarea");
+
             if (mutliLineText.attr("name") === "multiline") {
                 validateMultilineText(mutliLineText.attr("id"), valuesToSubmit)
             }
@@ -123,12 +124,23 @@ function validateText(id, valuesToSubmit) {
     }
 }
 
+function overlapWithNoFlight(name) {
+    console.log(name);
+    let div = document.getElementById('map-requirement');
+    div.style.display = 'block';
+    div.getElementsByTagName("P")[0].innerHTML = name;
+}
+
+function resetMapRequirement() {
+    let div = document.getElementById('map-requirement');
+    div.style.display = 'none';
+}
+
 function validateMap(valuesToSubmit) {
     let feature = source.getFeatureById(flightId);
     if ((feature == null)) {
         valuesToSubmit.errors = true;
-    }
-    else {
+    } else {
         let zone = feature.getGeometry();
         let mapDetails = {};
         mapDetails.center = zone.getCenter();

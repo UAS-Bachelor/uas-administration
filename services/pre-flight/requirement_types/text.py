@@ -17,5 +17,5 @@ class Text(Requirement):
             text(self.name)
             stripped_name = self.name.replace(" ", "-")
 
-            doc.stag('input', type='text', id='upload-file-'+stripped_name, name=stripped_name, value=self.default_value)
+            doc.stag('input', type='text', id='text-'+stripped_name, name=stripped_name, value=self.default_value)
         return doc.getvalue()
