@@ -14,12 +14,14 @@ class Map(Requirement):
 
     def get_html(self):
         doc, tag, text = Doc().tagtext()
+        stripped_name = self.name.replace(" ", "-")
 
-        with tag('div', id='map-requirement', style='display:none'):
+        with tag('div', name=stripped_name, id='map-requirement', style='display:none'):
             result = render_template('open_layers_map.html', bufferSize=self.safety_zone_size)
-            stripped_name = self.name.replace(" ", "-")
+
             doc.asis('<p></p>')
-            doc.stag('input', type='file', id='map-overlap-' + stripped_name, name=stripped_name)
+            with tag('div'):
+                doc.stag('input', type='file', id='map-overlap-' + stripped_name, name="No flight requirement")
 
         result += doc.getvalue()
         return result

@@ -76,8 +76,8 @@ function sendData(valuesToSend) {
 function validateChildren(parent, valuesToSubmit) {
     $(parent).children().filter("div").each(function () {
         let id = $(this).attr("id");
-        if (id === "map") {
-            validateMap(valuesToSubmit);
+        if (id === "map-requirement") {
+            validateMap($(this).attr("name"), valuesToSubmit);
         }
         else {
             let children = $(this).children().filter("input");
@@ -136,17 +136,25 @@ function resetMapRequirement() {
     div.style.display = 'none';
 }
 
-function validateMap(valuesToSubmit) {
-    let feature = source.getFeatureById(flightId);
-    if ((feature == null)) {
+function validateMap(name, valuesToSubmit) {
+    //let feature = source.getFeatureById(flightId);
+    let fileElementName = "map-overlap-" + name;
+    let file = document.getElementById(fileElementName);
+    if (flightZoneIsNotDrawn()) {
         valuesToSubmit.errors = true;
-    } else {
+    }
+    else if ($('#map-requirement').is(':visible')) {
+        if (file.value === "") {
+            valuesToSubmit.errors = true;
+        }
+    }
+    else {/*
         let zone = feature.getGeometry();
         let mapDetails = {};
         mapDetails.center = zone.getCenter();
         mapDetails.radius = zone.getRadius();
-        mapDetails.bufferSize = bufferSize;
-        valuesToSubmit.map = JSON.stringify(mapDetails);
+        mapDetails.bufferSize = bufferSize;*/
+        valuesToSubmit.map = JSON.stringify(getMapDetails());
     }
 }
 

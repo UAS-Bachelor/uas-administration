@@ -137,6 +137,23 @@
         bufferCircle.setRadius(circle.getRadius() + bufferSize);
     }
 
+    function getMapDetails() {
+        let feature = source.getFeatureById(flightId);
+        if (feature != null) {
+            let zone = feature.getGeometry();
+            let mapDetails = {};
+            mapDetails.center = zone.getCenter();
+            mapDetails.radius = zone.getRadius();
+            mapDetails.bufferSize = bufferSize;
+            return mapDetails;
+        }
+    }
+
+    function flightZoneIsNotDrawn() {
+        let feature = source.getFeatureById(flightId);
+        return feature == null;
+    }
+
     addInteractions();
 </script>
 </body>
