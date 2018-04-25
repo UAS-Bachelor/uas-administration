@@ -1,0 +1,32 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 70%;
+    margin: 20px auto 0px auto;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:not(:first-child) {
+    cursor: pointer;
+}
+
+tr:not(:first-child):hover {
+    background-color: #ececec !important;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+.comment {
+    resize: none;
+}
+
+p {
+    white-space: pre-wrap;
+}

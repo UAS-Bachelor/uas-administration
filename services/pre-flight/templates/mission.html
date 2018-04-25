@@ -1,0 +1,9 @@
+{{ error_msg }}
+{% if mission %}
+    {{ map|safe }}
+    <p>ID: {{ mission['_id'] }}</p>
+    {% for attribute in mission if not attribute=="_id" %}
+        <p>{{ attribute|title|replace('-', ' ') }}: {{ mission[attribute] }}</p>
+    {% endfor %}
+    {{ files|safe }}
+{% endif %}

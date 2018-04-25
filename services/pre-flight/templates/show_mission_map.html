@@ -1,0 +1,91 @@
+<head>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+</head>
+<body>
+<div id="map" class="map" style="height: 400px; width: 800px"></div>
+<script>
+    let raster = new ol.layer.Tile({
+        source: new ol.source.OSM()
+    });
+
+    let flightZoneStyle = [
+        new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#4eccff',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            })
+        })
+    ];
+
+    let bufferZoneStyle = [
+        new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#C4C4C4',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            })
+        })
+    ];
+
+    let source = new ol.source.Vector();
+    let vector = new ol.layer.Vector({
+        source: source,
+        style: flightZoneStyle
+    });
+
+    let sourceBuffer = new ol.source.Vector();
+    let vectorBuffer = new ol.layer.Vector({
+        source: sourceBuffer,
+        style: bufferZoneStyle
+    });
+
+
+    let map = new ol.Map({
+        layers: [raster, vector, vectorBuffer],
+        target: 'map',
+        view: new ol.View({
+            center: ({{ center }}),//ol.proj.fromLonLat([10.4283, 55.3688]),
+            zoom: 16
+        })
+    });
+
+    const flightId = "flightId";
+    const bufferId = "bufferId";
+
+    function drawZones(center, radius, bufferSize) {
+        drawFlightZone(center, radius);
+        drawBuffer(center, radius, bufferSize);
+    }
+
+    function drawFlightZone(center, radius) {
+        flight = new ol.geom.Circle(center, radius);
+        let feature = new ol.Feature({
+            geometry: flight
+        });
+        feature.setId(flightId);
+        source.addFeature(feature);
+    }
+
+    function drawBuffer(center, radius, bufferSize) {
+        radius = radius + bufferSize;
+        buffer = new ol.geom.Circle(center, radius);
+        let feature = new ol.Feature({
+            geometry: buffer
+        });
+        feature.setId(bufferId);
+        sourceBuffer.addFeature(feature);
+
+        let extent = buffer.getExtent();
+        map.getView().fit(extent);
+    }
+
+    drawZones({{ center }}, {{ radius }}, {{ bufferSize }});
+</script>
