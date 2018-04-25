@@ -1,6 +1,6 @@
 import argparse
-import sys
 import configparser
+import sys
 from os import system
 
 import requests
@@ -9,7 +9,9 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 config = configparser.ConfigParser()
+services = configparser.ConfigParser()
 config.read('config.ini')
+services.read('services.ini')
 
 
 @app.route('/')
@@ -17,40 +19,31 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/login')
-def login():
-    try:
-        login = requests.get(config['Routing']['base_url'] + ':5002/login').text
-    except requests.exceptions.ConnectionError:
-        login = 'Login service unavailable'
-    return render_template('layout.html', html=login)
-
-
 @app.route('/new-mission')
 def new_mission():
-    try:
-        new_mission_request = requests.get(config['Routing']['base_url'] + ':5004/new-mission').text
-    except requests.exceptions.ConnectionError:
-        return 'New Mission service unavailable'
+    new_mission_request = get("pre-flight", "/new-mission")
     return render_template('layout.html', html=new_mission_request)
 
 
 @app.route('/view-missions')
 def view_missions():
-    try:
-        view_missions_service = requests.get(config['Routing']['base_url'] + ':5004/view-missions').text
-    except requests.exceptions.ConnectionError:
-        return 'View missions service unavailable'
+    view_missions_service = get("pre-flight", "/view-missions")
     return render_template('layout.html', html=view_missions_service)
 
 
 @app.route('/view-mission/<id>')
 def view_mission(id):
-    try:
-        view_mission_service = requests.get(config['Routing']['base_url'] + ':5004/view-mission/' + id).text
-    except requests.exceptions.ConnectionError:
-        return 'View mission service unavailable'
+    view_mission_service = get("pre-flight", "/view-mission/" + id)
     return render_template('layout.html', html=view_mission_service)
+
+
+def get(service, route):
+    try:
+        url = config['Routing']['base_url'] + ":" + services[service]['port'] + route
+        service_request = requests.get(url).text
+        return service_request
+    except requests.exceptions.ConnectionError:
+        return service + " service unavailable"
 
 
 if __name__ == '__main__':

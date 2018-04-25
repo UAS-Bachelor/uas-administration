@@ -5,5 +5,5 @@
     {% for attribute in mission if not attribute=="_id" %}
         <p>{{ attribute|title|replace('-', ' ') }}: {{ mission[attribute] }}</p>
     {% endfor %}
-    {{ files|safe|default('No files have been uploaded') }}
+    {{ files|safe }}
 {% endif %}
