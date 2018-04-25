@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <th>Mission id</th>
+        <th>Mission date</th>
+        <th>Mission pilot</th>
+    </tr>
+    {% for mission in missions_list %}
+    <tr onclick="window.location='/view-mission/{{ mission['_id'] }}'">
+        <td>{{ mission['_id'] }}</td>
+        <td>{{ mission['time'] }}</td>
+        <td>{{ mission['Pilot-name'] }}</td>
+    </tr>
+    {% endfor %}
+</table>

@@ -1,10 +1,17 @@
-from flask import Flask, render_template
-import requests
-import sys
 import argparse
+import configparser
+import sys
 from os import system
 
+import requests
+from flask import Flask, render_template
+
 app = Flask(__name__)
+
+config = configparser.ConfigParser()
+services = configparser.ConfigParser()
+config.read('config.ini')
+services.read('services.ini')
 
 
 @app.route('/')
@@ -12,22 +19,31 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/login')
-def login():
-    try:
-        login = requests.get('http://127.0.0.1:5002/login').text
-    except requests.exceptions.ConnectionError:
-        return 'Login service unavailable'
-    return render_template('layout.html', html=login)
-
-
 @app.route('/new-mission')
-def newMission():
+def new_mission():
+    new_mission_request = get("pre-flight", "/new-mission")
+    return render_template('layout.html', html=new_mission_request)
+
+
+@app.route('/view-missions')
+def view_missions():
+    view_missions_service = get("pre-flight", "/view-missions")
+    return render_template('layout.html', html=view_missions_service)
+
+
+@app.route('/view-mission/<id>')
+def view_mission(id):
+    view_mission_service = get("pre-flight", "/view-mission/" + id)
+    return render_template('layout.html', html=view_mission_service)
+
+
+def get(service, route):
     try:
-        newMission = requests.get('http://127.0.0.1:5004/new-mission').text
+        url = config['Routing']['base_url'] + ":" + services[service]['port'] + route
+        service_request = requests.get(url).text
+        return service_request
     except requests.exceptions.ConnectionError:
-        return 'New Mission service unavailable'
-    return render_template('layout.html', html=newMission)
+        return service + " service unavailable"
 
 
 if __name__ == '__main__':
