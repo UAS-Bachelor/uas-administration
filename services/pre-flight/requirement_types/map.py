@@ -22,7 +22,7 @@ class Map(Requirement):
 
             doc.asis('<p></p>')
             with tag('div'):
-                doc.stag('input', type='file', id='map-overlap-' + stripped_name, name="No flight requirement")
+                doc.stag('input', type='file', id='map-overlap-' + stripped_name, name="No flight requirement", multiple="true")
 
         result += doc.getvalue()
         return result

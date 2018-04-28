@@ -49,8 +49,10 @@ function sendData(valuesToSend) {
 
     for (const [key, value] of Object.entries(valuesToSend)) {
         if (value instanceof HTMLInputElement) {
-            let file = value.files[0];
-            formData.append(key, file);
+            for (let i = 0; i < value.files.length; i++) {
+                let file = value.files[i];
+                formData.append(key + ":" + i, file);
+            }
         }
         else {
             formData.append(key, value);
@@ -69,8 +71,8 @@ function sendData(valuesToSend) {
             }
         }
     };
-    //request.open("POST", "http://127.0.0.1:5004/save-mission");
-    //request.send(formData);
+    request.open("POST", "http://127.0.0.1:5004/save-mission");
+    request.send(formData);
 }
 
 function validateChildren(parent, valuesToSubmit) {
@@ -143,9 +145,13 @@ function validateMap(name, valuesToSubmit) {
     if (flightZoneIsNotDrawn()) {
         valuesToSubmit.errors = true;
     }
-    else if ($('#map-requirement').is(':visible')) {
+    else if (noFlightZoneOverLap()) {
         if (file.value === "") {
             valuesToSubmit.errors = true;
+        }
+        else {
+            valuesToSubmit.map = JSON.stringify(getMapDetails());
+            valuesToSubmit[file.name] = file;
         }
     }
     else {/*
@@ -165,7 +171,7 @@ function validateRadio(name, valuesToSubmit) {
         if (radioButtons[i].checked === true) {
             anyChecked = true;
             let modeLength = radioButtons[i].getAttribute("name").length;
-            let chosen = radioButtons[i].getAttribute("id").substr(modeLength)
+            let chosen = radioButtons[i].getAttribute("id").substr(modeLength);
             let chosenId = "#" + chosen;
             valuesToSubmit[name] = chosen;
             validateChildren(chosenId, valuesToSubmit);

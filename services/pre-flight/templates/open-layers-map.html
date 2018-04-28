@@ -61,7 +61,7 @@
 
     let noFlight = new ol.layer.Vector({
         source: new ol.source.Vector({
-            url: 'static/export.kml',//'https://openlayers.org/en/v4.6.5/examples/data/kml/2012-02-10.kml',
+            url: 'static/export.kml',
             format: new ol.format.KML()
         })
     });
@@ -78,19 +78,25 @@
     const bufferSize = {{ bufferSize }};
     const flightId = "flightId";
     const bufferId = "bufferCircleId";
-    let draw, flightZone; // global so we can remove them later
-    let modify = new ol.interaction.Modify({
-        source: source
-    });
+    let draw, flightZone, modify;
 
-    map.addInteraction(modify);
-
-    function addInteractions() {
+    function initInteractions() {
         draw = new ol.interaction.Draw({
             source: source,
             type: "Circle"
         });
 
+        modify = new ol.interaction.Modify({
+            source: source
+        });
+    }
+
+    function addInteractions() {
+        map.addInteraction(draw);
+        map.addInteraction(modify);
+    }
+
+    function addListeners() {
         draw.on('drawend', function (e) {
             let feature = e.feature;
             let circle = feature.getGeometry();
@@ -110,12 +116,16 @@
                 checkOverlapWithNoFlight(extent);
             })
         });
+    }
 
-        map.addInteraction(draw);
+    function initMap() {
+        initInteractions();
+        addInteractions();
+        addListeners();
     }
 
     function checkOverlapWithNoFlight(extent) {
-        noFlight.getSource().forEachFeatureInExtent(extent, function (e) {
+        noFlight.getSource().forEachFeatureIntersectingExtent(extent, function (e) {
             overlapWithNoFlight(e.get('name'));
         })
     }
@@ -149,11 +159,20 @@
         }
     }
 
+    function noFlightZoneOverLap() {
+        let extent = source.getFeatures()[0].getGeometry().getExtent();
+        let result = false;
+        noFlight.getSource().forEachFeatureIntersectingExtent(extent, function (e) {
+            result = true;
+        });
+        return result;
+    }
+
     function flightZoneIsNotDrawn() {
         let feature = source.getFeatureById(flightId);
         return feature == null;
     }
 
-    addInteractions();
+    initMap();
 </script>
 </body>
