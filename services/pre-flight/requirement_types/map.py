@@ -8,6 +8,7 @@ class Map(Requirement):
 
     def __init__(self, name):
         super(Map, self).__init__(name)
+        self.safety_zone_size = 0
 
     def set_safety_zone_size(self, size):
         self.safety_zone_size = size
@@ -17,7 +18,7 @@ class Map(Requirement):
         stripped_name = self.name.replace(" ", "-")
 
         with tag('div', name=stripped_name, id='map-requirement', style='display:none'):
-            result = render_template('open_layers_map.html', bufferSize=self.safety_zone_size)
+            result = render_template('open-layers-map.html', bufferSize=self.safety_zone_size)
 
             doc.asis('<p></p>')
             with tag('div'):
