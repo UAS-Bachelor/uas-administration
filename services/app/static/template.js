@@ -194,5 +194,8 @@ function validateFile(id, valuesToSubmit) {
 
 function validateMultilineText(id, valuesToSubmit) {
     let text = document.getElementById(id).value;
-    valuesToSubmit["Comment"] = text;
+    console.log(text);
+    if (text !== "") {
+        valuesToSubmit["Comment"] = text;
+    }
 }
