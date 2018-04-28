@@ -43,7 +43,7 @@ def __build_map(map):
     center = map['center']
     radius = map['radius']
     buffer_size = map['bufferSize']
-    return render_template('show_mission_map.html', center=center, radius=radius, bufferSize=buffer_size)
+    return render_template('show-mission-map.html', center=center, radius=radius, bufferSize=buffer_size)
 
 
 def __build_files(files):
