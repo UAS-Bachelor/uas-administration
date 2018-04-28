@@ -27,13 +27,13 @@ def new_mission():
 
 @app.route('/view-missions')
 def view_missions():
-    view_missions_service = get("pre-flight", "/view-missions")
+    view_missions_service = get("post-flight", "/view-missions")
     return render_template('layout.html', html=view_missions_service)
 
 
 @app.route('/view-mission/<id>')
 def view_mission(id):
-    view_mission_service = get("pre-flight", "/view-mission/" + id)
+    view_mission_service = get("post-flight", "/view-mission/" + id)
     return render_template('layout.html', html=view_mission_service)
 
 

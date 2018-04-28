@@ -1,37 +1,57 @@
 import argparse
 import json
 import os
-import sys
 from datetime import datetime
 from os import system
 
-from flask import Flask, render_template, request, jsonify
-from flask_cors import cross_origin
-from yattag import Doc
-
 import database_manager
-from template_parser import load_xml
+import sys
+from flask import Flask, render_template
+from yattag import Doc
 
 app = Flask(__name__)
 
 doc, tag, text = Doc().tagtext()
 
 
-@app.route('/new-mission')
-def new_mission():
-    return render_template('new-mission.html', message=__load_parser())
+@app.route('/view-missions')
+def view_missions():
+    missions_list = database_manager.get_missions()
+    return render_template('missions-list.html', missions_list=missions_list)
 
 
-@app.route('/save-mission', methods=['POST'])
-@cross_origin()
-def save_mission():
-    save_directory = __get_save_directory()
-    mission_to_save = __build_json(request, save_directory)
+@app.route('/view-mission/<id>')
+def view_mission(id):
+    no_errors, mission = database_manager.get_mission(id)
 
-    result = database_manager.create_mission(mission_to_save)
-    if result:
-        print("Entry added to db")
-    return jsonify(result=result)
+    if no_errors:
+        map = ""
+        files = ""
+        if "map" in mission:
+            map = __build_map(mission['map'])
+            del mission['map']
+
+        if "files" in mission:
+            files = __build_files(mission['files'])
+            del mission['files']
+        return render_template('mission.html', mission=mission, map=map, files=files)
+    else:
+        return render_template('mission.html', error_msg=mission)
+
+
+def __build_map(map):
+    center = map['center']
+    radius = map['radius']
+    buffer_size = map['bufferSize']
+    return render_template('show_mission_map.html', center=center, radius=radius, bufferSize=buffer_size)
+
+
+def __build_files(files):
+    files_html = "Uploaded files: <br />"
+    for file in files:
+        print(file['name'])
+        files_html += "- " + file['name'] + "<br />"
+    return files_html
 
 
 def __build_json(request_data, save_directory):
@@ -69,22 +89,9 @@ def __build_json(request_data, save_directory):
     return data_to_save
 
 
-def __get_save_directory():
-    save_directory = os.path.dirname(os.path.realpath(__file__)) + "/uploads/"
-    if not os.path.exists(save_directory):
-        os.mkdir(save_directory)
-
-    return save_directory
-
-
-def __load_parser():
-    xml_reference = 'services/pre-flight/template.xml'
-    return load_xml(xml_reference)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=int, default=5004,
+    parser.add_argument('-p', '--port', type=int, default=5005,
                         help='specify which port to run this service on')
     parser.add_argument('-v', '--version', type=float, default=0,
                         help='specify which version of the service this is')
