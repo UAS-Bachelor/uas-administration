@@ -56,9 +56,7 @@ def __build_json(request_data, save_directory):
     if not os.path.exists(new_dir):
         os.mkdir(new_dir)
     for e in form_list_files:
-        response_to_validate = request_data.files[e]
-        save_location = new_dir + "/" + response_to_validate.filename
-        response_to_validate.save(save_location)
+        save_location = __save_file(request_data.files[e], new_dir)
         files.append({
             'name': e,
             'location': save_location
@@ -67,6 +65,13 @@ def __build_json(request_data, save_directory):
     if len(files) > 0:
         data_to_save['files'] = files
     return data_to_save
+
+
+def __save_file(file, save_dir):
+    response_to_validate = file
+    save_location = save_dir + "/" + response_to_validate.filename
+    response_to_validate.save(save_location)
+    return save_location
 
 
 def __get_save_directory():
