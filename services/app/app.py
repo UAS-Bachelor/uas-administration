@@ -21,19 +21,19 @@ def index():
 
 @app.route('/new-mission')
 def new_mission():
-    new_mission_request = get("pre-flight", "/new-mission")
+    new_mission_request = get("pre_flight", "/new-mission")
     return render_template('layout.html', html=new_mission_request)
 
 
 @app.route('/view-missions')
 def view_missions():
-    view_missions_service = get("post-flight", "/view-missions")
+    view_missions_service = get("post_flight", "/view-missions")
     return render_template('layout.html', html=view_missions_service)
 
 
 @app.route('/view-mission/<id>')
 def view_mission(id):
-    view_mission_service = get("post-flight", "/view-mission/" + id)
+    view_mission_service = get("post_flight", "/view-mission/" + id)
     return render_template('layout.html', html=view_mission_service)
 
 

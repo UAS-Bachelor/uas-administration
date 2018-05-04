@@ -83,7 +83,7 @@ def __get_save_directory():
 
 
 def __load_parser():
-    xml_reference = 'services/pre-flight/template.xml'
+    xml_reference = 'services/pre_flight/template.xml'
     return load_xml(xml_reference)
 
 
