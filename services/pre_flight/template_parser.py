@@ -126,6 +126,7 @@ def parse_checkbox(node, parent):
         parent.add_child(new_checkbox_requirement)
         parse_childs(node, new_checkbox_requirement)
 
+
 def parse_multiline_text(node, parent):
     if not name_tag_error(node, "Multiline Text"):
         new_multiline_text_requirement = Multiline_text(node.get('name'))
