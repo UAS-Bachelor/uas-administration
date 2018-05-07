@@ -1,9 +1,10 @@
 import configparser
+import os
 
 from pymongo import MongoClient, errors
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(os.path.join(os.path.dirname(__file__), '../../config.ini'))
 database = config['Database']['database']
 
 
