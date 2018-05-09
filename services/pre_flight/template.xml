@@ -29,6 +29,9 @@
         <choice name="City zone"/>
     </requirement-choice>
 
+    <requirement-text special="drone-type" />
+    <requirement-drone-type name="ss"/>
+
     <requirement-choice name="Drone type">
         <choice name="Type 1"/>
 
