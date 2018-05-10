@@ -24,14 +24,14 @@ class TemplateParserTest(unittest.TestCase):
     def test_no_name_on_requirement(self):
         tree = ET.parse(self.no_name_xml_reference)
         root = tree.getroot()
-        template_parser.parse_text(root[0], self.node)
-        self.assertRaises(NoNameException)
+        with self.assertRaises(NoNameException):
+            template_parser.parse_text(root[0], self.node)
 
     def test_empty_name_on_requirement(self):
         tree = ET.parse(self.empty_name_xml_reference)
         root = tree.getroot()
-        template_parser.parse_text(root[0], self.node)
-        self.assertRaises(EmptyNameException)
+        with self.assertRaises(EmptyNameException):
+            template_parser.parse_text(root[0], self.node)
 
     def test_parse_file_method(self):
         tree = ET.parse(self.file_xml_reference)
