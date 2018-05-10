@@ -4,27 +4,70 @@ import template_parser
 import codecs
 import xml.etree.ElementTree as ET
 
+from exceptions.tag_name_exception import EmptyNameException, NoNameException
+from requirement_types.multiline_text import MultilineText
 from requirement_types.root import Root
 from requirement_types.supply_file import SupplyFile
+from requirement_types.text import Text
 
 
-class PreFlightTest(unittest.TestCase):
+class TemplateParserTest(unittest.TestCase):
 
-    def SetUp(self):
-        pass
+    def setUp(self):
+        self.no_name_xml_reference = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_no_name.xml')
+        self.empty_name_xml_reference = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_empty_name.xml')
+        self.file_xml_reference = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_file.xml')
+        self.text_xml_reference = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_text.xml')
+        self.multiline_text_xml_reference = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_multiline_text.xml')
+        self.node = Root("test_root")
 
-    def test_parse_file(self):
-        xml_reference = os.path.join(os.path.dirname(__file__), 'test_files/test_parse_file.xml')
-        result_html = os.path.join(os.path.dirname(__file__), 'test_files/test_parse_file_result.html')
+    def test_no_name_on_requirement(self):
+        tree = ET.parse(self.no_name_xml_reference)
+        root = tree.getroot()
+        template_parser.parse_text(root[0], self.node)
+        self.assertRaises(NoNameException)
 
-        html = codecs.open(result_html, 'r')
-        result = template_parser.load_xml(xml_reference)
-        self.assertEqual(result, html.read())
+    def test_empty_name_on_requirement(self):
+        tree = ET.parse(self.empty_name_xml_reference)
+        root = tree.getroot()
+        template_parser.parse_text(root[0], self.node)
+        self.assertRaises(EmptyNameException)
 
     def test_parse_file_method(self):
-        xml_reference = os.path.join(os.path.dirname(__file__), 'test_files/test_parse_file.xml')
-        tree = ET.parse(xml_reference)
+        tree = ET.parse(self.file_xml_reference)
         root = tree.getroot()
-        node = Root("test_root")
-        template_parser.parse_supply_file(root[0], node)
-        self.assertIsInstance(node.get_children()[0], SupplyFile)
+        template_parser.parse_supply_file(root[0], self.node)
+        self.assertIsInstance(self.node.get_children()[0], SupplyFile)
+
+    def test_parse_file(self):
+        result_html = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_file_result.html')
+
+        html = codecs.open(result_html, 'r')
+        result = template_parser.load_xml(self.file_xml_reference)
+        self.assertEqual(result, html.read())
+
+    def test_parse_text_method(self):
+        tree = ET.parse(self.text_xml_reference)
+        root = tree.getroot()
+        template_parser.parse_text(root[0], self.node)
+        self.assertIsInstance(self.node.get_children()[0], Text)
+
+    def test_parse_text(self):
+        result_html = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_text_result.html')
+
+        html = codecs.open(result_html, 'r')
+        result = template_parser.load_xml(self.text_xml_reference)
+        self.assertEqual(result, html.read())
+
+    def test_parse_multiline_text_method(self):
+        tree = ET.parse(self.multiline_text_xml_reference)
+        root = tree.getroot()
+        template_parser.parse_multiline_text(root[0], self.node)
+        self.assertIsInstance(self.node.get_children()[0], MultilineText)
+
+    def test_parse_multiline_text(self):
+        result_html = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_multiline_text_result.html')
+
+        html = codecs.open(result_html, 'r')
+        result = template_parser.load_xml(self.multiline_text_xml_reference)
+        self.assertEqual(result, html.read())
