@@ -8,7 +8,7 @@ from unittest import mock
 class PreFlightTest(unittest.TestCase):
 
     def setUp(self):
-        app.config['TESTING']
+        app.config['TESTING'] = True
         self.app = app.test_client()
         pre_flight.template_to_use = 'test_template.xml'
 

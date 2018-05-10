@@ -19,7 +19,7 @@ template_to_use = "template.xml"
 
 @app.route('/new-mission')
 def new_mission():
-    return render_template('new-mission.html', message=__load_parser())
+        return render_template('new-mission.html', message=__load_parser())
 
 
 @app.route('/save-mission', methods=['POST'])

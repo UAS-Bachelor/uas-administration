@@ -1,13 +1,14 @@
 import xml.etree.ElementTree as ET
 import re
 
+from exceptions.tag_name_exception import NoNameException, EmptyNameException
 from requirement_types.checkbox import Checkbox
 from requirement_types.supply_file import SupplyFile
 from requirement_types.choice import Choice, Option
 from requirement_types.root import Root
 from requirement_types.map import Map
 from requirement_types.text import Text
-from requirement_types.multiline_text import Multiline_text
+from requirement_types.multiline_text import MultilineText
 from yattag import Doc 
 
 __regex = "(requirement)-(.+)"
@@ -129,17 +130,19 @@ def parse_checkbox(node, parent):
 
 def parse_multiline_text(node, parent):
     if not name_tag_error(node, "Multiline Text"):
-        new_multiline_text_requirement = Multiline_text(node.get('name'))
+        new_multiline_text_requirement = MultilineText(node.get('name'))
         parent.add_child(new_multiline_text_requirement)
 
 
 def name_tag_error(node, requirement_type):
     if node.get('name') is None:
         set_error("The " + requirement_type + " requirement, needs to have a name!")
+        raise NoNameException(requirement_type)
         return True
 
     elif node.get('name') is "":
         set_error("The " + requirement_type + " requirement, can not have an empty name field!")
+        raise EmptyNameException(requirement_type)
         return True
 
     return False
