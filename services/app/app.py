@@ -2,6 +2,7 @@ import argparse
 import configparser
 import sys
 from os import system
+import os
 
 import requests
 from flask import Flask, render_template
@@ -10,8 +11,8 @@ app = Flask(__name__)
 
 config = configparser.ConfigParser()
 services = configparser.ConfigParser()
-config.read('config.ini')
-services.read('services.ini')
+config.read(os.path.join(os.path.dirname(__file__), '../../config.ini'))
+services.read(os.path.join(os.path.dirname(__file__), '../../services.ini'))
 
 
 @app.route('/')

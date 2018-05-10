@@ -1,0 +1,5 @@
+<requirements>
+    <requirement-choice name="Test-Choice">
+        <choice name="Test-Choice-Option"/>
+    </requirement-choice>
+</requirements>

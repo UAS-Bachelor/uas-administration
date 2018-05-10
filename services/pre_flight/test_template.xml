@@ -1,0 +1,26 @@
+<requirements>
+    <requirement-text name="Pilot name"/>
+    <requirement-text name="Co-Pilot name"/>
+    <requirement-text name="Flight height" default="100"/>
+    <requirement-choice name="Flight mode">
+        <choice name="Open"/>
+
+        <choice name="Specified">
+            <requirement-checkbox name="SORA needed">
+                <requirement-supply-file name="SORA"/>
+            </requirement-checkbox>
+
+            <requirement-checkbox name="Police approval needed">
+                <requirement-supply-file name="Police approval"/>
+            </requirement-checkbox>
+
+            <requirement-checkbox name="Land owner permit needed">
+                <requirement-supply-file name="Land owner permit"/>
+            </requirement-checkbox>
+        </choice>
+
+        <choice name="Certified">
+        </choice>
+    </requirement-choice>
+    <requirement-multiline-text name="Comment"/>
+</requirements>

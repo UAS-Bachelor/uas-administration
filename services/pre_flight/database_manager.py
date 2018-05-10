@@ -1,9 +1,10 @@
 import configparser
+import os
 
 from pymongo import MongoClient, errors
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(os.path.join(os.path.dirname(__file__), '../../config.ini'))
 database = config['Database']['database']
 
 
@@ -19,14 +20,12 @@ def create_mission(mission_details):
 
     conn = __connect_to_db()
     if conn is None:
-        return False
+        return False, "Could not connect to db"
     try:
         collection = conn[database].missions
         collection.insert_one(mission_details)
-        return True
+        return True, "Mission created"
     except errors.OperationFailure as e:
-        print("Could not insert into db: %s" % str(e))
-        return False
+        return False, "Could not insert into db: %s" % str(e)
     except errors.ServerSelectionTimeoutError as e:
-        print("Could not connect to db: %s" % str(e))
-        return False
+        return False, "Could not connect to db: %s" % str(e)
