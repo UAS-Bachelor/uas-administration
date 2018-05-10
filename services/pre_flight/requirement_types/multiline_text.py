@@ -1,10 +1,11 @@
 from .requirement_type import Requirement
 from yattag import Doc
 
-class Multiline_text(Requirement):
+
+class MultilineText(Requirement):
 
     def __init__(self, name):
-        super(Multiline_text, self).__init__(name)
+        super(MultilineText, self).__init__(name)
         self.default_value = ""
 
     def set_default_value(self, value):
