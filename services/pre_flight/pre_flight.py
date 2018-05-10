@@ -15,7 +15,7 @@ from template_parser import load_xml
 app = Flask(__name__)
 
 doc, tag, text = Doc().tagtext()
-
+template_to_use = "template.xml"
 
 @app.route('/new-mission')
 def new_mission():
@@ -83,7 +83,7 @@ def __get_save_directory():
 
 
 def __load_parser():
-    xml_reference = os.path.join(os.path.dirname(__file__), 'template.xml')
+    xml_reference = os.path.join(os.path.dirname(__file__), template_to_use)
     return load_xml(xml_reference)
 
 
