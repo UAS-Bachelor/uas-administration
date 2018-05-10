@@ -6,3 +6,4 @@ Flask
 Flask-Cors
 psutil
 requests
+flask_httpauth
