@@ -17,6 +17,7 @@ app = Flask(__name__)
 doc, tag, text = Doc().tagtext()
 template_to_use = "template.xml"
 
+
 @app.route('/new-mission')
 def new_mission():
         return render_template('new-mission.html', message=__load_parser())
@@ -29,8 +30,6 @@ def save_mission():
     mission_to_save = __build_json(request, save_directory)
 
     result = database_manager.create_mission(mission_to_save)
-    if result:
-        print("Entry added to db")
     return jsonify(result=result)
 
 
