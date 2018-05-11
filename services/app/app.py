@@ -5,18 +5,16 @@ import sys
 from os import system
 
 import requests
-from flask import Flask, render_template, redirect, request, abort
+from flask import Flask, render_template, redirect, request
 from flask_login import login_required, LoginManager, logout_user, current_user
-from flask_wtf import CSRFProtect
 
 import database_manager
 from login.login import attempt_login
-from login.user import User
 from login.login_form import LoginForm
+from login.user import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '1234'
-csrf = CSRFProtect(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -32,17 +30,6 @@ services.read(os.path.join(os.path.dirname(__file__), '../../services.ini'))
 def load_user(userid):
     user_exists, user_info = database_manager.get_user(userid)
     return User(user_info['user'], user_info['password'])
-
-
-@app.route("/save-mission", methods=["POST"])
-def save():
-    data = request.get_data()
-    auth = current_user.username, current_user.password
-    headers = {'Content-Type': request.content_type}
-    url = config['Routing']['base_url'] + ":" + services["pre_flight"]['port'] + "/save-mission"
-    service_request = requests.post(url, data=data, headers=headers, auth=auth).text
-
-    return ""
 
 
 @app.route('/')
@@ -72,6 +59,16 @@ def new_mission():
     auth = current_user.username, current_user.password
     new_mission_request = get_auth("pre_flight", "/new-mission", auth)
     return render_template('layout.html', html=new_mission_request)
+
+
+@app.route("/save-mission", methods=["POST"])
+@login_required
+def save():
+    data = request.get_data()
+    auth = current_user.username, current_user.password
+    headers = {'Content-Type': request.content_type}
+    service_request = post_with_headers_and_auth("pre_flight", "/save-mission", data, headers, auth)
+    return service_request
 
 
 @app.route('/view-missions')
@@ -115,10 +112,10 @@ def get_auth(service, route, auth):
         return service + " service unavailable"
 
 
-def post(service, route, data):
+def post_with_headers_and_auth(service, route, data, headers, auth):
     try:
         url = config['Routing']['base_url'] + ":" + services[service]['port'] + route
-        service_request = requests.post(url, data=data).text
+        service_request = requests.post(url, data=data, headers=headers, auth=auth).text
         return service_request
     except requests.exceptions.ConnectionError:
         return service + " service unavailable"
