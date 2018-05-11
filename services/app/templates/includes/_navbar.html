@@ -1,23 +1,31 @@
 {% set navigation_bar = [ 
-    ('/', 'index', 'Home'),
-    ('/new-mission', 'new_mission', 'New Mission'),
-    ('/view-missions', 'view_missions', 'View Missions')]
--%}
+    ('/', 'index', 'Home', False),
+    ('/new-mission', 'new_mission', 'New Mission', True),
+    ('/view-missions', 'view_missions', 'View Missions', True),
+    ('/logout', 'logout', 'Logout', True)]-%}
 <!--{% set active_page = active_page|default('home') -%}-->
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Drone Administration</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
-        aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-            {% for href, id, caption in navigation_bar %}
-            <li class="nav-item{% if request.endpoint==id %} active{% endif %}">
-                <a href="{{ href|e }}" class="nav-link">{{caption|e }}</a>
-            </li>
+            {% for href, id, caption, require_login in navigation_bar %}
+                {% if current_user.is_authenticated or not require_login %}
+                    <li class="nav-item{% if request.endpoint==id %} active{% endif %}">
+                        <a href="{{ href|e }}" class="nav-link">{{ caption|e }}</a>
+                    </li>
+                {% endif %}
             {% endfor %}
+            {% if not current_user.is_authenticated %}
+                <li class="nav-item{% if request.endpoint=='login' %} active{% endif %}">
+                    <a href="/login" class="nav-link">Login</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

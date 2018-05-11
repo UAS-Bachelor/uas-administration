@@ -1,3 +1,4 @@
+wtforms
 bson
 pymongo
 configobj
@@ -6,4 +7,4 @@ Flask
 Flask-Cors
 psutil
 requests
-flask_httpauth
+flask_login
