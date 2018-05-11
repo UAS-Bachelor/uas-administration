@@ -38,6 +38,7 @@ def new_mission():
 
 @app.route('/save-mission', methods=['POST'])
 @cross_origin()
+@auth.login_required
 def save_mission():
     save_directory = __get_save_directory()
     mission_to_save = __build_json(request, save_directory)

@@ -34,6 +34,17 @@ def load_user(userid):
     return User(user_info['user'], user_info['password'])
 
 
+@app.route("/save-mission", methods=["POST"])
+def save():
+    data = request.get_data()
+    auth = current_user.username, current_user.password
+    headers = {'Content-Type': request.content_type}
+    url = config['Routing']['base_url'] + ":" + services["pre_flight"]['port'] + "/save-mission"
+    service_request = requests.post(url, data=data, headers=headers, auth=auth).text
+
+    return ""
+
+
 @app.route('/')
 def index():
     return render_template('index.html')

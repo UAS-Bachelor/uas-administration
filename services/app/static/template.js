@@ -72,7 +72,7 @@ function sendData(valuesToSend) {
             }
         }
     };
-    request.open("POST", "http://127.0.0.1:5004/save-mission");
+    request.open("POST", "http://127.0.0.1:5003/save-mission");
     request.send(formData);
 }
 
