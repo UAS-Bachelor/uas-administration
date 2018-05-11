@@ -25,8 +25,24 @@ class PreFlightTest(unittest.TestCase):
     def test_save_mission(self):
         data_to_send = MultiDict([('Pilot-name','test'),('Co-Pilot-name','test'),('Flight-height','100'),('Flight-mode','Open'),('Comment', 'test comment')])
         response = self.app.post('/save-mission', data=data_to_send, follow_redirects=True)
-        reponse_data = json.loads(response.data)
+        response_data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(reponse_data['result'], True)
+        self.assertEqual(response_data['result'][0], True)
+
+    def test_save_mission_when_none(self):
+        data_to_send = None
+        response = self.app.post('/save-mission', data=data_to_send, follow_redirects=True)
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['result'][0], True)
+
+    def test_save_mission_when_data_is_wrong(self):
+        data_to_send = MultiDict([('Flight-test','0'),('Flight-something','not-open'),('Comment', '')])
+        response = self.app.post('/save-mission', data=data_to_send, follow_redirects=True)
+        response_data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['result'][0], True)
 
