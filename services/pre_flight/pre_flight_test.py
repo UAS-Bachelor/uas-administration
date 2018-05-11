@@ -4,8 +4,11 @@ import json
 from werkzeug.datastructures import MultiDict
 
 import pre_flight
+import database_manager
 from pre_flight import app
 from unittest import mock, skip
+from mock import patch
+import mongomock 
 
 
 class PreFlightTest(unittest.TestCase):
@@ -25,8 +28,12 @@ class PreFlightTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_result, response.data)
 
-    @skip("Database not mocked")
+    
     def test_save_mission(self):
+        client = mongomock.MongoClient()
+        with mock.patch(database_manager.__connect_to_db, return_value=client):
+            yield client
+
         data_to_send = MultiDict([('Pilot-name', 'test'), ('Co-Pilot-name', 'test'), ('Flight-height', '100'), ('Flight-mode', 'Open'), ('Comment', 'test comment')])
         response = self.app.post('/save-mission', data=data_to_send, follow_redirects=True)
         response_data = json.loads(response.data)
@@ -34,8 +41,12 @@ class PreFlightTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response_data['result'][0])
 
-    @skip("Database not mocked")
+    
     def test_save_mission_when_none(self):
+        client = mongomock.MongoClient()
+        with mock.patch(database_manager.__connect_to_db, return_value=client):
+            yield client
+
         data_to_send = None
         response = self.app.post('/save-mission', data=data_to_send, follow_redirects=True)
         response_data = json.loads(response.data)
@@ -43,8 +54,12 @@ class PreFlightTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data['result'][0], True)
 
-    @skip("Database not mocked")
+
     def test_save_mission_when_data_is_wrong(self):
+        client = mongomock.MongoClient()
+        with mock.patch(database_manager.__connect_to_db, return_value=client):
+            yield client
+        
         data_to_send = MultiDict([('Flight-test','0'),('Flight-something','not-open'),('Comment', '')])
         response = self.app.post('/save-mission', data=data_to_send, follow_redirects=True)
         response_data = json.loads(response.data)
