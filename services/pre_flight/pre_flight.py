@@ -7,30 +7,43 @@ from os import system
 
 from flask import Flask, render_template, request, jsonify
 from flask_cors import cross_origin
+from flask_httpauth import HTTPBasicAuth
 from yattag import Doc
+from flask_basicauth import BasicAuth
 
 import database_manager
 from template_parser import load_xml
 
 app = Flask(__name__)
 
+auth = HTTPBasicAuth()
+
 doc, tag, text = Doc().tagtext()
+template_to_use = "template.xml"
+
+
+@auth.get_password
+def get_password(username):
+    user_exists, user_info = database_manager.get_user(username)
+    if user_exists:
+        return user_info['password']
+    return None
 
 
 @app.route('/new-mission')
+@auth.login_required
 def new_mission():
-    return render_template('new-mission.html', message=__load_parser())
+        return render_template('new-mission.html', message=__load_parser())
 
 
 @app.route('/save-mission', methods=['POST'])
 @cross_origin()
+@auth.login_required
 def save_mission():
     save_directory = __get_save_directory()
     mission_to_save = __build_json(request, save_directory)
 
     result = database_manager.create_mission(mission_to_save)
-    if result:
-        print("Entry added to db")
     return jsonify(result=result)
 
 
@@ -83,7 +96,7 @@ def __get_save_directory():
 
 
 def __load_parser():
-    xml_reference = 'services/pre_flight/template.xml'
+    xml_reference = os.path.join(os.path.dirname(__file__), template_to_use)
     return load_xml(xml_reference)
 
 

@@ -1,5 +1,5 @@
 from yattag import Doc
-from requirement_types.requirement_with_children import RequirementWithChildren
+from .requirement_with_children import RequirementWithChildren
 
 
 class Checkbox(RequirementWithChildren):

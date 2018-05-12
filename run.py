@@ -11,15 +11,15 @@ def __launch_service(service, config):
         instances = 1
 
     amount_of_instances = check_port(port)
-    if amount_of_instances < instances:
-        instance_difference = instances - amount_of_instances
-        print("Only {} instances of {} service are running, starting {} more of version {} at port {}".format(
-            amount_of_instances, service, instance_difference, version, port))
-        for i in range(instance_difference):
-            open_cmd(service, port, version)
-    else:
-        print("{} instances of {} service are already running at port {}".format(
-            amount_of_instances, service, port))
+    #if amount_of_instances < instances:
+    #    instance_difference = instances - amount_of_instances
+    #    print("Only {} instances of {} service are running, starting {} more of version {} at port {}".format(
+    #        amount_of_instances, service, instance_difference, version, port))
+    #    for i in range(instance_difference):
+    open_cmd(service, port, version)
+    #else:
+    #    print("{} instances of {} service are already running at port {}".format(
+    #        amount_of_instances, service, port))
 
 
 def run(service):

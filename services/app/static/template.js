@@ -62,16 +62,17 @@ function sendData(valuesToSend) {
     let request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
-            let result = JSON.parse(request.response);
-            if (result.result) {
+            let response = JSON.parse(request.response);
+            if (response.result[0]) {
                 document.getElementById("successMessage").style.display = "block";
             }
             else {
                 document.getElementById("serverErrorMessage").style.display = "block";
+                document.getElementById("serverErrorMessage").innerText = response.result[1];
             }
         }
     };
-    request.open("POST", "http://127.0.0.1:5004/save-mission");
+    request.open("POST", "/save-mission");
     request.send(formData);
 }
 

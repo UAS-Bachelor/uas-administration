@@ -36,3 +36,18 @@ def get_mission(id):
         return True, collection.find_one({"_id": objectId})
     except bson.errors.InvalidId:
         return False, "The flight id: " + id + " does not exist"
+
+
+def get_user(username):
+    conn = __connect_to_db()
+    if conn is None:
+        return False, "Could not connect to the database"
+
+    collection = conn[database].users
+    try:
+        query = collection.find_one({"user": username})
+        if query is None:
+            return False, "No such user exists"
+        return True, query
+    except bson.errors.InvalidId:
+        return False, "The flight id: " + username + " does not exist"

@@ -12,9 +12,17 @@ def __get_path(service):
     return __services_dir + service + '/' + service + '.py'
 
 
+def __get_test_path(service):
+    return __services_dir + service + '/test_suite.py'
+
+
 def open_cmd(service, port, version):
     Popen([executable, __get_path(service), '-p', str(port),
            '-v', str(version)])
+
+
+def run_test(service):
+    Popen([executable, __get_test_path(service)])
 
 
 def close_cmd(pid):

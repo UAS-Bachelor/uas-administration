@@ -4,22 +4,33 @@ import os
 from datetime import datetime
 from os import system
 
+from flask_httpauth import HTTPBasicAuth
+
 import database_manager
 import sys
 from flask import Flask, render_template
 from yattag import Doc
 
 app = Flask(__name__)
-
+auth = HTTPBasicAuth()
 doc, tag, text = Doc().tagtext()
 
 
+@auth.get_password
+def get_password(username):
+    user_exists, user_info = database_manager.get_user(username)
+    if user_exists:
+        return user_info['password']
+    return None
+
+
 @app.route('/view-missions')
+@auth.login_required
 def view_missions():
     missions_list = database_manager.get_missions()
     return render_template('missions-list.html', missions_list=missions_list)
 
-
+@auth.login_required
 @app.route('/view-mission/<id>')
 def view_mission(id):
     no_errors, mission = database_manager.get_mission(id)
