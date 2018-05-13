@@ -1,6 +1,6 @@
 import unittest
 
-from flask_login import current_user, AnonymousUserMixin
+from flask_login import current_user
 
 import database_manager
 from app import app
