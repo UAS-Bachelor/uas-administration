@@ -32,7 +32,10 @@ class PreFlightTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_result, response.data)
 
-    
+    def test_get_new_mission_unauthorized(self):
+        response = self.app.get('/new-mission', follow_redirects=True)
+        self.assertEqual(response.status_code, 401)
+
     def test_save_mission(self):
         client = mongomock.MongoClient()
         with mock.patch(database_manager.__connect_to_db, return_value=client):
@@ -45,7 +48,6 @@ class PreFlightTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response_data['result'][0])
 
-    
     def test_save_mission_when_none(self):
         client = mongomock.MongoClient()
         with mock.patch(database_manager.__connect_to_db, return_value=client):
@@ -57,7 +59,6 @@ class PreFlightTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data['result'][0], True)
-
 
     def test_save_mission_when_data_is_wrong(self):
         client = mongomock.MongoClient()

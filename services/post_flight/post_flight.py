@@ -30,6 +30,7 @@ def view_missions():
     missions_list = database_manager.get_missions()
     return render_template('missions-list.html', missions_list=missions_list)
 
+
 @auth.login_required
 @app.route('/view-mission/<id>')
 def view_mission(id):
