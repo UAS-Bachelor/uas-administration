@@ -45,3 +45,5 @@ def get_user(username):
         return True, query
     except bson.errors.InvalidId:
         return False, "The flight id: " + username + " does not exist"
+    except errors.ServerSelectionTimeoutError as e:
+        return False, "Could not connect to db: %s" % str(e)

@@ -9,8 +9,7 @@ import pre_flight
 import database_manager
 from pre_flight import app
 from unittest import mock, skip
-from mock import patch
-import mongomock 
+import mongomock
 
 
 class PreFlightTest(unittest.TestCase):
