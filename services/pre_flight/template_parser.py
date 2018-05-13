@@ -3,6 +3,7 @@ import re
 
 from exceptions.requirement_choice_exception import WrongChoiceChildException
 from exceptions.requirement_exception import RequirementNotRecognized
+from exceptions.requirement_map_exception import NoSafetyZoneOnMapException, MapNotChildOfRoot
 from exceptions.tag_name_exception import NoNameException, EmptyNameException
 from requirement_types.checkbox import Checkbox
 from requirement_types.supply_file import SupplyFile
@@ -80,13 +81,15 @@ def parse_map(node, parent):
     if isinstance(parent, Root):
         if not name_tag_error(node, "Map"):
             if node.get('safetyzoneSize') is None:
-                set_error("The map requirement must have a safety zone size!")
+                raise NoSafetyZoneOnMapException()
+                #set_error("The map requirement must have a safety zone size!")
             else:
                 new_map_requirement = Map(node.get('name'))
                 new_map_requirement.set_safety_zone_size(node.get('safetyzoneSize'))
                 parent.add_child(new_map_requirement)
     else:
-        set_error("The map requirement can only be a child of root not \"" + parent.name + "\".") #Might wanna add type to object
+        raise MapNotChildOfRoot(parent.name)
+        #set_error("The map requirement can only be a child of root not \"" + parent.name + "\".") #Might wanna add type to object
 
 
 def parse_choice(node, parent):
