@@ -9,7 +9,7 @@ config.read(os.path.join(os.path.dirname(__file__), '../../config.ini'))
 database = config['Database']['database']
 
 
-def __connect_to_db():
+def connect_to_db():
     try:
         return MongoClient()
     except errors.ConnectionFailure as e:
@@ -19,7 +19,7 @@ def __connect_to_db():
 def create_mission(mission_details):
     global config
 
-    conn = __connect_to_db()
+    conn = connect_to_db()
     if conn is None:
         return False, "Could not connect to db"
     try:
@@ -33,7 +33,7 @@ def create_mission(mission_details):
 
 
 def get_user(username):
-    conn = __connect_to_db()
+    conn = connect_to_db()
     if conn is None:
         return False, "Could not connect to the database"
 

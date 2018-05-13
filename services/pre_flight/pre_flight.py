@@ -40,11 +40,12 @@ def new_mission():
 @auth.login_required
 @cross_origin()
 def save_mission():
-    print(request.content_type)
-    save_directory = __get_save_directory()
-    mission_to_save = __build_json(request, save_directory)
-    result = database_manager.create_mission(mission_to_save)
-    return jsonify(result=result)
+    if request.content_type[:19] == "multipart/form-data" or request.content_type[:33] == "application/x-www-form-urlencoded":
+        save_directory = __get_save_directory()
+        mission_to_save = __build_json(request, save_directory)
+        result = database_manager.create_mission(mission_to_save)
+        return jsonify(result=result), 200
+    return "", 400
 
 
 def __build_json(request_data, save_directory):
