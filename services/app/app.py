@@ -63,7 +63,7 @@ def new_mission():
 
 @app.route("/save-mission", methods=["POST"])
 @login_required
-def save():
+def save_mission():
     data = request.get_data()
     auth = current_user.username, current_user.password
     headers = {'Content-Type': request.content_type}
