@@ -1,15 +1,12 @@
 import json
 import unittest
 from base64 import b64encode
-from unittest import skip
 
 from werkzeug.datastructures import MultiDict
 
-import pre_flight
 import database_manager
+import pre_flight
 from pre_flight import app
-from unittest import mock, skip
-import mongomock
 
 
 class PreFlightTest(unittest.TestCase):
@@ -22,7 +19,8 @@ class PreFlightTest(unittest.TestCase):
 
     def tearDown(self):
         pre_flight.template_to_use = 'template.xml'
-        database_manager.connect_to_db()['uas_administration_dev'].missions.remove({ })
+        database_manager.connect_to_db()['uas-administration-dev'].missions.remove({'Pilot-name': 'test'})
+        database_manager.connect_to_db()['uas-administration-dev'].missions.remove({'Flight-test': 0})
 
     def test_get_new_mission(self):
         headers = {

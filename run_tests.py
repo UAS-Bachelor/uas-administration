@@ -5,7 +5,7 @@ def run():
     print("Running tests in: ")
     for service_section in configobj:
         if configobj[service_section].as_bool('hasTests'):
-            print("- " + service_section + " module\n")
+            print("- " + service_section + " module")
             run_test(service_section)
 
 

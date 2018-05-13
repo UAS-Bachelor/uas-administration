@@ -31,8 +31,8 @@ def view_missions():
     return render_template('missions-list.html', missions_list=missions_list)
 
 
-@auth.login_required
 @app.route('/view-mission/<id>')
+@auth.login_required
 def view_mission(id):
     no_errors, mission = database_manager.get_mission(id)
 
@@ -46,9 +46,9 @@ def view_mission(id):
         if "files" in mission:
             files = __build_files(mission['files'])
             del mission['files']
-        return render_template('mission.html', mission=mission, map=map, files=files)
+        return render_template('mission.html', mission=mission, map=map, files=files), 200
     else:
-        return render_template('mission.html', error_msg=mission)
+        return render_template('mission.html', error_msg=mission), 400
 
 
 def __build_map(map):
