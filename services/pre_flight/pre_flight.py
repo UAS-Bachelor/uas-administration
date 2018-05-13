@@ -37,12 +37,12 @@ def new_mission():
 
 
 @app.route('/save-mission', methods=['POST'])
-@cross_origin()
 @auth.login_required
+@cross_origin()
 def save_mission():
+    print(request.content_type)
     save_directory = __get_save_directory()
     mission_to_save = __build_json(request, save_directory)
-
     result = database_manager.create_mission(mission_to_save)
     return jsonify(result=result)
 

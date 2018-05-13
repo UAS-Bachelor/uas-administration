@@ -66,6 +66,7 @@ def new_mission():
 def save():
     data = request.get_data()
     auth = current_user.username, current_user.password
+    print(request.content_type[:19] is "multipart/form-data")
     headers = {'Content-Type': request.content_type}
     service_request = post_with_headers_and_auth("pre_flight", "/save-mission", data, headers, auth)
     return service_request
