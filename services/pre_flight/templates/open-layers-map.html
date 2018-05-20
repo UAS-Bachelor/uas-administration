@@ -1,0 +1,178 @@
+<head>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+</head>
+<body>
+<div id="map" class="map" style="height: 400px; width: 800px"></div>
+<script>
+    let raster = new ol.layer.Tile({
+        source: new ol.source.OSM()
+    });
+
+    let editableStyle = [
+        new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#59a9ff',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.6)'
+            })
+        }),
+        new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({
+                    color: '#4eccff'
+                })
+            }),
+            geometry: function (feature) {
+                let center = feature.getGeometry().getCenter();
+                return new ol.geom.Point(center);
+            }
+        })
+    ];
+
+    let uneditableStyle = [
+        new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#C4C4C4',
+                width: 3
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            })
+        })
+    ];
+
+    let source = new ol.source.Vector();
+    let vector = new ol.layer.Vector({
+        source: source,
+        style: editableStyle
+    });
+
+    let bufferSource = new ol.source.Vector();
+    let bufferVector = new ol.layer.Vector({
+        source: bufferSource,
+        style: uneditableStyle
+    });
+
+    let noFlight = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            url: 'static/export.kml',
+            format: new ol.format.KML()
+        })
+    });
+
+    let map = new ol.Map({
+        layers: [raster, vector, bufferVector, noFlight],
+        target: 'map',
+        view: new ol.View({
+            center: ol.proj.fromLonLat([10.4283, 55.3688]),
+            zoom: 16
+        })
+    });
+
+    const bufferSize = {{ bufferSize }};
+    const flightId = "flightId";
+    const bufferId = "bufferCircleId";
+    let draw, flightZone, modify;
+
+    function initInteractions() {
+        draw = new ol.interaction.Draw({
+            source: source,
+            type: "Circle"
+        });
+
+        modify = new ol.interaction.Modify({
+            source: source
+        });
+    }
+
+    function addInteractions() {
+        map.addInteraction(draw);
+        map.addInteraction(modify);
+    }
+
+    function addListeners() {
+        draw.on('drawend', function (e) {
+            let feature = e.feature;
+            let circle = feature.getGeometry();
+            feature.setId(flightId);
+            drawBuffer(circle.getCenter(), circle.getRadius(), circle.getLayout());
+            map.removeInteraction(draw);
+
+            checkOverlapWithNoFlight(circle.getExtent());
+
+            circle.on('change', function (e) {
+                updateBuffer(e.target);
+            });
+
+            modify.on('modifyend', function (e) {
+                let extent = e.features.item(0).getGeometry().getExtent();
+                resetMapRequirement();
+                checkOverlapWithNoFlight(extent);
+            })
+        });
+    }
+
+    function initMap() {
+        initInteractions();
+        addInteractions();
+        addListeners();
+    }
+
+    function checkOverlapWithNoFlight(extent) {
+        noFlight.getSource().forEachFeatureIntersectingExtent(extent, function (e) {
+            overlapWithNoFlight(e.get('name'));
+        })
+    }
+
+    function drawBuffer(center, radius) {
+        radius = radius + bufferSize;
+        flightZone = new ol.geom.Circle(center, radius);
+        let feature = new ol.Feature({
+            geometry: flightZone
+        });
+        feature.setId(bufferId);
+        bufferSource.addFeature(feature);
+    }
+
+    function updateBuffer(circle) {
+        let bufferCircle = bufferSource.getFeatureById(bufferId).getGeometry();
+
+        bufferCircle.setCenter(circle.getCenter());
+        bufferCircle.setRadius(circle.getRadius() + bufferSize);
+    }
+
+    function getMapDetails() {
+        let feature = source.getFeatureById(flightId);
+        if (feature != null) {
+            let zone = feature.getGeometry();
+            let mapDetails = {};
+            mapDetails.center = zone.getCenter();
+            mapDetails.radius = zone.getRadius();
+            mapDetails.bufferSize = bufferSize;
+            return mapDetails;
+        }
+    }
+
+    function noFlightZoneOverLap() {
+        let extent = source.getFeatures()[0].getGeometry().getExtent();
+        let result = false;
+        noFlight.getSource().forEachFeatureIntersectingExtent(extent, function (e) {
+            result = true;
+        });
+        return result;
+    }
+
+    function flightZoneIsNotDrawn() {
+        let feature = source.getFeatureById(flightId);
+        return feature == null;
+    }
+
+    initMap();
+</script>
+</body>

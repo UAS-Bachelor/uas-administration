@@ -49,8 +49,10 @@ function sendData(valuesToSend) {
 
     for (const [key, value] of Object.entries(valuesToSend)) {
         if (value instanceof HTMLInputElement) {
-            let file = value.files[0];
-            formData.append(key, file);
+            for (let i = 0; i < value.files.length; i++) {
+                let file = value.files[i];
+                formData.append(key + ":" + i, file);
+            }
         }
         else {
             formData.append(key, value);
@@ -60,24 +62,25 @@ function sendData(valuesToSend) {
     let request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
-            let result = JSON.parse(request.response);
-            if (result.result) {
+            let response = JSON.parse(request.response);
+            if (response.result[0]) {
                 document.getElementById("successMessage").style.display = "block";
             }
             else {
                 document.getElementById("serverErrorMessage").style.display = "block";
+                document.getElementById("serverErrorMessage").innerText = response.result[1];
             }
         }
     };
-    request.open("POST", "http://127.0.0.1:5004/save-mission");
+    request.open("POST", "/save-mission");
     request.send(formData);
 }
 
 function validateChildren(parent, valuesToSubmit) {
     $(parent).children().filter("div").each(function () {
         let id = $(this).attr("id");
-        if (id === "map") {
-            validateMap(valuesToSubmit);
+        if (id === "map-requirement") {
+            validateMap($(this).attr("name"), valuesToSubmit);
         }
         else {
             let children = $(this).children().filter("input");
@@ -98,6 +101,7 @@ function validateChildren(parent, valuesToSubmit) {
             }
 
             let mutliLineText = $(this).children().filter("textarea");
+
             if (mutliLineText.attr("name") === "multiline") {
                 validateMultilineText(mutliLineText.attr("id"), valuesToSubmit)
             }
@@ -123,18 +127,41 @@ function validateText(id, valuesToSubmit) {
     }
 }
 
-function validateMap(valuesToSubmit) {
-    let feature = source.getFeatureById(flightId);
-    if ((feature == null)) {
+function overlapWithNoFlight(name) {
+    console.log(name);
+    let div = document.getElementById('map-requirement');
+    div.style.display = 'block';
+    div.getElementsByTagName("P")[0].innerHTML = name;
+}
+
+function resetMapRequirement() {
+    let div = document.getElementById('map-requirement');
+    div.style.display = 'none';
+}
+
+function validateMap(name, valuesToSubmit) {
+    //let feature = source.getFeatureById(flightId);
+    let fileElementName = "map-overlap-" + name;
+    let file = document.getElementById(fileElementName);
+    if (flightZoneIsNotDrawn()) {
         valuesToSubmit.errors = true;
     }
-    else {
+    else if (noFlightZoneOverLap()) {
+        if (file.value === "") {
+            valuesToSubmit.errors = true;
+        }
+        else {
+            valuesToSubmit.map = JSON.stringify(getMapDetails());
+            valuesToSubmit[file.name] = file;
+        }
+    }
+    else {/*
         let zone = feature.getGeometry();
         let mapDetails = {};
         mapDetails.center = zone.getCenter();
         mapDetails.radius = zone.getRadius();
-        mapDetails.bufferSize = bufferSize;
-        valuesToSubmit.map = JSON.stringify(mapDetails);
+        mapDetails.bufferSize = bufferSize;*/
+        valuesToSubmit.map = JSON.stringify(getMapDetails());
     }
 }
 
@@ -145,7 +172,7 @@ function validateRadio(name, valuesToSubmit) {
         if (radioButtons[i].checked === true) {
             anyChecked = true;
             let modeLength = radioButtons[i].getAttribute("name").length;
-            let chosen = radioButtons[i].getAttribute("id").substr(modeLength)
+            let chosen = radioButtons[i].getAttribute("id").substr(modeLength);
             let chosenId = "#" + chosen;
             valuesToSubmit[name] = chosen;
             validateChildren(chosenId, valuesToSubmit);
@@ -168,5 +195,8 @@ function validateFile(id, valuesToSubmit) {
 
 function validateMultilineText(id, valuesToSubmit) {
     let text = document.getElementById(id).value;
-    valuesToSubmit["Comment"] = text;
+    console.log(text);
+    if (text !== "") {
+        valuesToSubmit["Comment"] = text;
+    }
 }
