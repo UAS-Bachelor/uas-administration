@@ -4,6 +4,7 @@ import re
 from exceptions.requirement_choice_exception import WrongChoiceChildException
 from exceptions.requirement_exception import RequirementNotRecognized
 from exceptions.requirement_map_exception import NoSafetyZoneOnMapException, MapNotChildOfRoot
+from exceptions.root_exception import WrongRootException
 from exceptions.tag_name_exception import NoNameException, EmptyNameException
 from requirement_types.checkbox import Checkbox
 from requirement_types.supply_file import SupplyFile
@@ -27,6 +28,8 @@ def load_xml(path):
 
     tree = ET.parse(path)
     root = tree.getroot()
+    if not root.tag == "requirements":
+        raise WrongRootException()
     parse_childs(root, node_root)
 
     if __error:
