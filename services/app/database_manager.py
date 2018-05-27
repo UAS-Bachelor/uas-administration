@@ -2,7 +2,6 @@ import configparser
 import os
 
 import bson
-from bson import ObjectId
 from pymongo import MongoClient, errors
 
 config = configparser.ConfigParser()

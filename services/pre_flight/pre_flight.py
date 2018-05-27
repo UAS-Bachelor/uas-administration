@@ -9,7 +9,6 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import cross_origin
 from flask_httpauth import HTTPBasicAuth
 from yattag import Doc
-from flask_basicauth import BasicAuth
 
 import database_manager
 from template_parser import load_xml
