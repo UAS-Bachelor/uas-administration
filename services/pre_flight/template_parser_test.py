@@ -108,7 +108,8 @@ class TemplateParserTest(unittest.TestCase):
         self.assertIsInstance(self.node.get_children()[0], Choice)
 
     def test_parse_choice(self):
-        result_html = os.path.join(os.path.dirname(__file__), 'test_template_files/test_parse_choice_result.html')
+        result_html = os.path.join(os.path.dirname(__file__),
+                                   'test_template_files/test_parse_choice_result.html')
 
         html = codecs.open(result_html, 'r')
         result = template_parser.load_xml(self.choice_xml_reference)
