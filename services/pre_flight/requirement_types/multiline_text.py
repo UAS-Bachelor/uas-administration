@@ -17,6 +17,6 @@ class MultilineText(Requirement):
             text(self.name)
             stripped_name = self.name.replace(" ", "-")
             doc.asis("<br/>")
-            with tag('textarea', rows='10', cols='100', klass='comment', id='multiline-'+stripped_name, name='multiline',placeholder='Write comment here if you are ugly as f*ck lmao...'):
+            with tag('textarea', rows='10', cols='100', klass='comment', id='multiline-'+stripped_name, name='multiline',placeholder='Write a comment here...'):
                 pass
         return doc.getvalue()
